@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Catchly Routencheck</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/catchly.css?v=18">
+  <link rel="stylesheet" href="assets/catchly.css?v=19">
 </head>
 <body>
   <div class="ambient-shapes" aria-hidden="true">
@@ -125,18 +125,24 @@
         <span class="final-badge">Geschafft</span>
         <h2 class="clean-title">Danke. Das hilft richtig weiter.</h2>
         <p class="subtitle">Aus deinen Antworten entsteht ein klareres Bild, wo der Erstkontakt einfacher, schneller oder verbindlicher werden kann.</p>
-        <div id="backendNotice" class="notice section"></div>
-        <p id="testExportNote" class="test-export-note">Testmodus: Im Live-Betrieb werden die Antworten direkt mit der Auswertung verbunden.</p>
-        <div class="btn-row section" id="downloadActions">
-          <button class="btn primary" id="downloadJsonBtn" type="button">Antworten als JSON</button>
-          <button class="btn ghost" id="downloadCsvBtn" type="button">Antworten als CSV</button>
-          <button class="btn indigo" id="restartBtn" type="button">Nochmals testen</button>
+        <div id="backendNotice" class="notice section hidden" aria-live="polite"></div>
+        <div class="btn-row section" id="submitActions">
+          <button class="btn primary" id="submitWebhookBtn" type="button">Routencheck abschicken</button>
         </div>
+        <details class="backup-export section" id="backupExportDetails">
+          <summary>Technischer Export / Backup</summary>
+          <p class="test-export-note">Nur verwenden, wenn die Übermittlung nicht klappt oder für interne Tests.</p>
+          <div class="btn-row" id="downloadActions">
+            <button class="btn ghost" id="downloadJsonBtn" type="button">Antworten als JSON</button>
+            <button class="btn ghost" id="downloadCsvBtn" type="button">Antworten als CSV</button>
+            <button class="btn indigo" id="restartBtn" type="button">Nochmals testen</button>
+          </div>
+        </details>
       </div>
     </section>
 
     <p class="footer-note">Catchly Routencheck · Anfragen, die liegen bleiben, sind verlorenes Geld.</p>
   </main>
-  <script src="assets/assessment.js?v=18"></script>
+  <script src="assets/assessment.js?v=19"></script>
 </body>
 </html>

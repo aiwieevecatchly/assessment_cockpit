@@ -1,5 +1,5 @@
-// Platzhalter für späteren Endpoint. Nicht hardcoden, keine Secrets im Frontend.
-const SUBMIT_ENDPOINT = '';
+// Produktiver Webhook-Endpunkt. Keine Secrets/API-Keys im Frontend.
+const SUBMIT_ENDPOINT = 'https://workflow.catchly.ch/webhook/routencheck-submit';
 
 const DEFAULT_QUESTIONS = [
   {
@@ -1628,6 +1628,7 @@ const state = {
   firmaFromUrl: '',
   leadCompany: '',
   participant: {},
+  clientResponseId: '',
   questions: DEFAULT_QUESTIONS,
   activeQuestions: [],
   index: 0,
@@ -1689,6 +1690,7 @@ function init() {
   $('identityForm').addEventListener('submit', handleIdentitySubmit);
   $('nextBtn').addEventListener('click', handleNext);
   $('backBtn').addEventListener('click', handleBack);
+  $('submitWebhookBtn')?.addEventListener('click', submitToWebhook);
   $('downloadJsonBtn').addEventListener('click', downloadJson);
   $('downloadCsvBtn').addEventListener('click', downloadCsv);
   $('restartBtn')?.addEventListener('click', resetAssessment);
@@ -2315,27 +2317,69 @@ async function finish() {
   $('progressBar').style.width = '100%';
   $('questionView').classList.add('hidden');
   $('finalView').classList.remove('hidden');
-
-  if (SUBMIT_ENDPOINT) {
-    $('backendNotice').textContent = 'Danke, deine Antworten sind angekommen. Daraus entsteht nun die Auswertung für euren Erstkontakt.';
-    try {
-      await fetch(SUBMIT_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(buildPayload())
-      });
-      $('downloadActions').classList.add('hidden');
-      $('testExportNote').classList.add('hidden');
-    } catch (error) {
-      $('backendNotice').textContent = 'Die automatische Übertragung hat nicht geklappt. Bitte die Antwortdatei herunterladen und weiterleiten.';
-      $('downloadActions').classList.remove('hidden');
-      $('testExportNote').classList.remove('hidden');
-    }
-  } else {
-    $('backendNotice').textContent = 'Danke, deine Antworten sind erfasst. Im Live-Betrieb werden sie automatisch mit der Auswertung verbunden.';
-    $('downloadActions').classList.remove('hidden');
-    $('testExportNote').classList.remove('hidden');
+  const notice = $('backendNotice');
+  if (notice) {
+    notice.classList.add('hidden');
+    notice.classList.remove('success', 'error');
+    notice.textContent = '';
   }
+  const submitBtn = $('submitWebhookBtn');
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Routencheck abschicken';
+  }
+}
+
+async function submitToWebhook() {
+  const submitBtn = $('submitWebhookBtn');
+  const notice = $('backendNotice');
+  const payload = buildPayload();
+
+  if (!SUBMIT_ENDPOINT) {
+    showSubmitNotice('Die Übermittlung ist noch nicht verbunden. Bitte speichere die Antworten als JSON.', 'error');
+    return;
+  }
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Wird gesendet…';
+  }
+  showSubmitNotice('Wird gesendet…', 'info');
+
+  try {
+    const response = await fetch(SUBMIT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Webhook antwortete mit HTTP ${response.status}`);
+    }
+
+    showSubmitNotice('Danke, der Routencheck wurde erfolgreich übermittelt. Wir bereiten nun die Auswertung vor.', 'success');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Routencheck übermittelt';
+    }
+    const backup = $('backupExportDetails');
+    if (backup) backup.open = false;
+  } catch (error) {
+    console.error('Catchly Routencheck: Webhook-Übermittlung fehlgeschlagen. Prüfe Netzwerk, CORS und Webhook-Antwort.', error);
+    showSubmitNotice('Die Übermittlung hat nicht geklappt. Bitte versuche es nochmals oder speichere die Antworten als JSON.', 'error');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Routencheck abschicken';
+    }
+  }
+}
+
+function showSubmitNotice(message, type = 'info') {
+  const notice = $('backendNotice');
+  if (!notice) return;
+  notice.textContent = message;
+  notice.classList.remove('hidden', 'success', 'error', 'info');
+  notice.classList.add(type);
 }
 
 
@@ -2344,6 +2388,7 @@ function resetAssessment() {
   state.activeQuestions = [];
   state.index = 0;
   state.answers = {};
+  state.clientResponseId = '';
   $('finalView').classList.add('hidden');
   $('questionView').classList.add('hidden');
   $('identityView').classList.remove('hidden');
@@ -2353,7 +2398,7 @@ function resetAssessment() {
 }
 
 function buildPayload() {
-  const clientResponseId = buildClientResponseId();
+  const clientResponseId = state.clientResponseId || (state.clientResponseId = buildClientResponseId());
   const leadCompany = state.leadCompany || state.firmaFromUrl || '';
   const participantCompany = state.participant.company || '';
   const company = leadCompany || participantCompany || '';
