@@ -1319,3 +1319,127 @@ details[open] > .collapsible-summary::before {
 .collapsible-body {
   padding-top: 20px;
 }
+
+
+/* V16: Mehrfachauswahl und Zusatzfrage */
+.multi-hint {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border: 1px solid rgba(84,19,136,.18);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--indigo);
+  background: rgba(255,255,255,.72);
+}
+.choice-card.multi-choice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.choice-card .choice-main {
+  display: block;
+}
+.choice-card .checkmark {
+  flex: 0 0 28px;
+  height: 28px;
+  border: 1.5px solid rgba(84,19,136,.34);
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  color: var(--pink);
+  background: rgba(255,255,255,.9);
+}
+.choice-card.selected .checkmark {
+  border-color: var(--pink);
+  background: rgba(254,0,125,.08);
+}
+.follow-up-card {
+  margin-top: 4px;
+}
+.follow-up-card label {
+  color: var(--indigo);
+}
+
+/* V17: dezente Catchly-Formen im Hintergrund, nicht als UI-Container */
+body {
+  overflow-x: hidden;
+}
+
+.ambient-shapes {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.ambient-shape {
+  position: absolute;
+  display: block;
+  opacity: .105;
+  filter: blur(.1px);
+  animation: catchlyFloat 18s ease-in-out infinite alternate;
+}
+
+.shape-circle {
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  background: var(--gold);
+  top: 12%;
+  right: 8%;
+}
+
+.shape-square {
+  width: 170px;
+  height: 170px;
+  border-radius: 28px;
+  background: var(--pink);
+  bottom: 8%;
+  left: 7%;
+  transform: rotate(14deg);
+  animation-delay: -5s;
+}
+
+.shape-triangle {
+  width: 190px;
+  height: 190px;
+  background: var(--indigo);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  top: 58%;
+  right: 14%;
+  animation-delay: -9s;
+}
+
+.shape-ellipse {
+  width: 260px;
+  height: 130px;
+  border-radius: 999px;
+  background: var(--gold);
+  top: 4%;
+  left: 6%;
+  transform: rotate(-18deg);
+  animation-delay: -2s;
+}
+
+@keyframes catchlyFloat {
+  from { translate: 0 0; rotate: 0deg; }
+  to { translate: 18px -22px; rotate: 7deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-shape { animation: none; }
+}
+
+@media (max-width: 760px) {
+  .ambient-shape { opacity: .07; }
+  .shape-circle { width: 150px; height: 150px; right: -36px; }
+  .shape-square { width: 120px; height: 120px; left: -36px; }
+  .shape-triangle { width: 130px; height: 130px; right: -22px; }
+  .shape-ellipse { width: 180px; height: 90px; left: -48px; }
+}

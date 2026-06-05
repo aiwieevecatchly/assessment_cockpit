@@ -1,7 +1,7 @@
 {
-  "version": "7.0",
+  "version": "8.0",
   "source": "Catchly_Assessment_Fundament_final.xlsx",
-  "note": "Fragen sind am Excel-Fragenkatalog 02_GF_Assessment und 03_MA_Check ausgerichtet.",
+  "note": "Fragen bleiben am Excel-Fragenkatalog ausgerichtet. V16 ergänzt Mehrfachauswahl, eine Zusatzfrage für wiederkehrende Aufgaben und alltagstauglichere Formulierungen.",
   "questions": [
     {
       "id": "GF01",
@@ -11,44 +11,37 @@
       "area": "Geschäft & Fokus",
       "text": "Welche Leistung soll in den nächsten 12 Monaten stärker wachsen?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Wachstumsrichtung statt Bauchgefühl. Das fliesst in das Modul «Value Proposition» ein.",
+      "story": "Wachstumsrichtung statt Bauchgefühl. Das fliesst in das Modul «Value Proposition» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "installation",
-          "label": "Installation",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Installation"
         },
         {
           "value": "service_wartung",
-          "label": "Service / Wartung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Service / Wartung"
         },
         {
           "value": "sanierung_umbau",
-          "label": "Sanierung / Umbau",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Sanierung / Umbau"
         },
         {
           "value": "beratung_planung",
-          "label": "Beratung / Planung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Beratung / Planung"
         },
         {
           "value": "komplettloesung",
-          "label": "Komplettlösung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Komplettlösung"
         },
         {
           "value": "notfall_reparatur",
-          "label": "Notfall / Reparatur",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Notfall / Reparatur"
         },
         {
           "value": "andere",
-          "label": "Andere",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Andere"
         }
       ],
       "excelSource": {
@@ -65,50 +58,42 @@
       ],
       "area": "Geschäft & Fokus",
       "text": "Welche Kunden möchten Sie künftig häufiger gewinnen?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Ideal Customer Profile. Das fliesst in das Modul «Value Proposition» ein.",
-      "inputType": "choice",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Ideal Customer Profile. Das fliesst in das Modul «Value Proposition» ein.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "privatkunden",
-          "label": "Privatkunden",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Privatkunden"
         },
         {
           "value": "gewerbekunden",
-          "label": "Gewerbekunden",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Gewerbekunden"
         },
         {
           "value": "verwaltungen",
-          "label": "Verwaltungen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Verwaltungen"
         },
         {
           "value": "architekten_planer",
-          "label": "Architekten / Planer",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Architekten / Planer"
         },
         {
           "value": "generalunternehmer",
-          "label": "Generalunternehmer",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Generalunternehmer"
         },
         {
           "value": "stammkunden_servicekunden",
-          "label": "Stammkunden / Servicekunden",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Stammkunden / Servicekunden"
         },
         {
           "value": "groessere_projekte",
-          "label": "grössere Projekte",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "grössere Projekte"
         },
         {
           "value": "kleinere_schnelle_auftraege",
-          "label": "kleinere schnelle Aufträge",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "kleinere schnelle Aufträge"
         }
       ],
       "excelSource": {
@@ -116,7 +101,8 @@
         "id": "GF02",
         "module": "Value Proposition",
         "why": "Ideal Customer Profile"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "GF03",
@@ -126,7 +112,7 @@
       "area": "Geschäft & Fokus",
       "text": "Welche Art von Auftrag kostet viel Zeit, bringt aber zu wenig?",
       "helper": "Bitte spontan beantworten. Ein kurzer Satz reicht. Optional, wenn du dazu etwas sagen kannst.",
-      "story": "Warum wir das fragen: schlechte Auftragsqualität erkennen. Das fliesst in das Modul «Prozess / Priorisierung» ein.",
+      "story": "schlechte Auftragsqualität erkennen. Das fliesst in das Modul «Prozess / Priorisierung» ein.",
       "inputType": "textarea",
       "required": false,
       "answers": [],
@@ -143,51 +129,43 @@
         "geschaeftsfuehrung"
       ],
       "area": "Anfrageprozess",
-      "text": "Wo kommen heute die meisten Anfragen rein?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Eingangskanäle und Bruchstellen. Das fliesst in das Modul «Anfrageprozess» ein.",
-      "inputType": "choice",
+      "text": "Über welche Wege kommen neue Anfragen bei euch meistens rein?",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "So sehen wir, wo Anfragen entstehen und wo sie im Alltag leicht liegen bleiben.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "telefon",
-          "label": "Telefon",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Telefon"
         },
         {
           "value": "e_mail",
-          "label": "E-Mail",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "E-Mail"
         },
         {
           "value": "website",
-          "label": "Website",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Website"
         },
         {
           "value": "whatsapp",
-          "label": "WhatsApp",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "WhatsApp"
         },
         {
           "value": "empfehlung",
-          "label": "Empfehlung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Empfehlung"
         },
         {
           "value": "social_media",
-          "label": "Social Media",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Social Media"
         },
         {
           "value": "gemischt_mehrere_kanaele",
-          "label": "Gemischt / mehrere Kanäle",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Gemischt / mehrere Kanäle"
         },
         {
           "value": "weiss_nicht",
-          "label": "Weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Weiss nicht"
         }
       ],
       "excelSource": {
@@ -195,7 +173,8 @@
         "id": "GF04",
         "module": "Anfrageprozess",
         "why": "Eingangskanäle und Bruchstellen"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "GF05",
@@ -205,34 +184,29 @@
       "area": "Anfrageprozess",
       "text": "Wie klar ist intern geregelt, wer eine neue Anfrage übernimmt?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Zuständigkeit und Verbindlichkeit. Das fliesst in das Modul «Prozessrisiko» ein.",
+      "story": "Zuständigkeit und Verbindlichkeit. Das fliesst in das Modul «Prozessrisiko» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "klar_geregelt",
-          "label": "klar geregelt",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "klar geregelt"
         },
         {
           "value": "meistens_klar",
-          "label": "meistens klar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "meistens klar"
         },
         {
           "value": "personenabhaengig",
-          "label": "personenabhängig",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "personenabhängig"
         },
         {
           "value": "unklar",
-          "label": "unklar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "unklar"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -248,51 +222,43 @@
         "geschaeftsfuehrung"
       ],
       "area": "Anfrageprozess",
-      "text": "Wo hakt es nach Ihrer Einschätzung am häufigsten?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: grösster Soforthebel. Das fliesst in das Modul «Executive Summary» ein.",
-      "inputType": "choice",
+      "text": "Wo hakt es im Anfrageprozess am häufigsten?",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Hier erkennen wir, welche Reibung im Alltag am schnellsten Geld, Zeit oder Nerven kostet.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "anfrage_wird_zu_spaet_gesehen",
-          "label": "Anfrage wird zu spät gesehen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Anfrage wird zu spät gesehen"
         },
         {
           "value": "zustaendigkeit_unklar",
-          "label": "Zuständigkeit unklar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Zuständigkeit unklar"
         },
         {
           "value": "infos_fehlen",
-          "label": "Infos fehlen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Infos fehlen"
         },
         {
           "value": "nachfassen_fehlt",
-          "label": "Nachfassen fehlt",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Nachfassen fehlt"
         },
         {
           "value": "zu_viele_kanaele",
-          "label": "zu viele Kanäle",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "zu viele Kanäle"
         },
         {
           "value": "kunde_nicht_qualifiziert",
-          "label": "Kunde nicht qualifiziert",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kunde nicht qualifiziert"
         },
         {
           "value": "kein_klares_problem",
-          "label": "kein klares Problem",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "kein klares Problem"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -300,7 +266,8 @@
         "id": "GF06",
         "module": "Executive Summary",
         "why": "grösster Soforthebel"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "GF07",
@@ -310,7 +277,7 @@
       "area": "Nachfassen",
       "text": "Wie wird heute nachgefasst, wenn ein Kunde nicht reagiert?",
       "helper": "Bitte spontan beantworten. Ein kurzer Satz reicht.",
-      "story": "Warum wir das fragen: Follow-up-Systematik. Das fliesst in das Modul «Nachfassen» ein.",
+      "story": "Follow-up-Systematik. Das fliesst in das Modul «Nachfassen» ein.",
       "inputType": "textarea",
       "required": true,
       "answers": [],
@@ -328,50 +295,42 @@
       ],
       "area": "Value Proposition",
       "text": "Warum entscheiden sich Kunden heute für Sie?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Selbstbild und Differenzierung. Das fliesst in das Modul «Value Proposition» ein.",
-      "inputType": "choice",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Selbstbild und Differenzierung. Das fliesst in das Modul «Value Proposition» ein.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "empfehlung_bekanntheit",
-          "label": "Empfehlung / Bekanntheit",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Empfehlung / Bekanntheit"
         },
         {
           "value": "regionale_naehe",
-          "label": "regionale Nähe",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "regionale Nähe"
         },
         {
           "value": "schnelle_reaktion",
-          "label": "schnelle Reaktion",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "schnelle Reaktion"
         },
         {
           "value": "saubere_beratung",
-          "label": "saubere Beratung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "saubere Beratung"
         },
         {
           "value": "qualitaet_der_arbeit",
-          "label": "Qualität der Arbeit",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Qualität der Arbeit"
         },
         {
           "value": "preis",
-          "label": "Preis",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Preis"
         },
         {
           "value": "spezialwissen",
-          "label": "Spezialwissen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Spezialwissen"
         },
         {
           "value": "weiss_nicht_genau",
-          "label": "weiss nicht genau",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht genau"
         }
       ],
       "excelSource": {
@@ -379,7 +338,8 @@
         "id": "GF08",
         "module": "Value Proposition",
         "why": "Selbstbild und Differenzierung"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "GF09",
@@ -388,50 +348,42 @@
       ],
       "area": "Value Proposition",
       "text": "Was nervt Ihre Kunden vor dem Auftrag vermutlich am meisten?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Kundenschmerz sichtbar machen. Das fliesst in das Modul «Value Proposition» ein.",
-      "inputType": "choice",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Kundenschmerz sichtbar machen. Das fliesst in das Modul «Value Proposition» ein.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "niemand_meldet_sich_schnell",
-          "label": "niemand meldet sich schnell",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "niemand meldet sich schnell"
         },
         {
           "value": "unklare_preise",
-          "label": "unklare Preise",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "unklare Preise"
         },
         {
           "value": "zu_wenig_beratung",
-          "label": "zu wenig Beratung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "zu wenig Beratung"
         },
         {
           "value": "zu_viele_anbieter_schwer_vergleichbar",
-          "label": "zu viele Anbieter / schwer vergleichbar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "zu viele Anbieter / schwer vergleichbar"
         },
         {
           "value": "fachsprache_komplizierte_erklaerung",
-          "label": "Fachsprache / komplizierte Erklärung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Fachsprache / komplizierte Erklärung"
         },
         {
           "value": "lange_wartezeiten",
-          "label": "lange Wartezeiten",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "lange Wartezeiten"
         },
         {
           "value": "schlechte_planbarkeit",
-          "label": "schlechte Planbarkeit",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "schlechte Planbarkeit"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -439,7 +391,8 @@
         "id": "GF09",
         "module": "Value Proposition",
         "why": "Kundenschmerz sichtbar machen"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "GF10",
@@ -448,50 +401,42 @@
       ],
       "area": "Value Proposition",
       "text": "Was macht Sie aus Kundensicht wirklich anders?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Differenzierung prüfen. Das fliesst in das Modul «Value Proposition» ein.",
-      "inputType": "choice",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Differenzierung prüfen. Das fliesst in das Modul «Value Proposition» ein.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "erfahrung",
-          "label": "Erfahrung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Erfahrung"
         },
         {
           "value": "verlaesslichkeit",
-          "label": "Verlässlichkeit",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Verlässlichkeit"
         },
         {
           "value": "tempo",
-          "label": "Tempo",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Tempo"
         },
         {
           "value": "beratung",
-          "label": "Beratung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Beratung"
         },
         {
           "value": "komplettloesung",
-          "label": "Komplettlösung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Komplettlösung"
         },
         {
           "value": "spezialgebiet",
-          "label": "Spezialgebiet",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Spezialgebiet"
         },
         {
           "value": "regionale_verankerung",
-          "label": "regionale Verankerung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "regionale Verankerung"
         },
         {
           "value": "aktuell_nicht_klar_formuliert",
-          "label": "aktuell nicht klar formuliert",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "aktuell nicht klar formuliert"
         }
       ],
       "excelSource": {
@@ -499,7 +444,8 @@
         "id": "GF10",
         "module": "Value Proposition",
         "why": "Differenzierung prüfen"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "GF11",
@@ -508,50 +454,42 @@
       ],
       "area": "Value Proposition",
       "text": "Woran erkennt ein Neukunde, dass Sie gut sind?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Beweisbarkeit und Vertrauen. Das fliesst in das Modul «Value Proposition» ein.",
-      "inputType": "choice",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Beweisbarkeit und Vertrauen. Das fliesst in das Modul «Value Proposition» ein.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "google_bewertungen",
-          "label": "Google-Bewertungen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Google-Bewertungen"
         },
         {
           "value": "referenzen_projekte",
-          "label": "Referenzen / Projekte",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Referenzen / Projekte"
         },
         {
           "value": "zertifikate",
-          "label": "Zertifikate",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Zertifikate"
         },
         {
           "value": "team_sichtbar",
-          "label": "Team sichtbar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Team sichtbar"
         },
         {
           "value": "empfehlungen",
-          "label": "Empfehlungen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Empfehlungen"
         },
         {
           "value": "lange_erfahrung",
-          "label": "lange Erfahrung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "lange Erfahrung"
         },
         {
           "value": "kaum_sichtbar",
-          "label": "kaum sichtbar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "kaum sichtbar"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -559,7 +497,8 @@
         "id": "GF11",
         "module": "Value Proposition",
         "why": "Beweisbarkeit und Vertrauen"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "GF12",
@@ -568,45 +507,38 @@
       ],
       "area": "Wettbewerb",
       "text": "Warum verlieren Sie manchmal gegen andere Anbieter?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Wettbewerbsdruck verstehen. Das fliesst in das Modul «Konkurrenzanalyse» ein.",
-      "inputType": "choice",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Wettbewerbsdruck verstehen. Das fliesst in das Modul «Konkurrenzanalyse» ein.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "preis",
-          "label": "Preis",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Preis"
         },
         {
           "value": "zu_langsame_rueckmeldung",
-          "label": "zu langsame Rückmeldung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "zu langsame Rückmeldung"
         },
         {
           "value": "angebot_unklar",
-          "label": "Angebot unklar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Angebot unklar"
         },
         {
           "value": "konkurrenz_wirkt_professioneller",
-          "label": "Konkurrenz wirkt professioneller",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Konkurrenz wirkt professioneller"
         },
         {
           "value": "fehlende_kapazitaet",
-          "label": "fehlende Kapazität",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "fehlende Kapazität"
         },
         {
           "value": "kunde_war_nicht_passend",
-          "label": "Kunde war nicht passend",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kunde war nicht passend"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -614,7 +546,8 @@
         "id": "GF12",
         "module": "Konkurrenzanalyse",
         "why": "Wettbewerbsdruck verstehen"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "GF13",
@@ -624,7 +557,7 @@
       "area": "Wettbewerb",
       "text": "Welche lokalen Konkurrenten nerven Sie am meisten?",
       "helper": "Bitte spontan beantworten. Ein kurzer Satz reicht. Optional, wenn du dazu etwas sagen kannst.",
-      "story": "Warum wir das fragen: Input für A-Konkurrenz. Das fliesst in das Modul «ABC-Konkurrenz» ein.",
+      "story": "Input für A-Konkurrenz. Das fliesst in das Modul «ABC-Konkurrenz» ein.",
       "inputType": "textarea",
       "required": false,
       "answers": [],
@@ -643,7 +576,7 @@
       "area": "Wettbewerb",
       "text": "Gibt es Anbieter in der Schweiz, die Sie digital stark finden?",
       "helper": "Bitte spontan beantworten. Ein kurzer Satz reicht. Optional, wenn du dazu etwas sagen kannst.",
-      "story": "Warum wir das fragen: Input für Best-in-Class. Das fliesst in das Modul «Benchmark Schweiz» ein.",
+      "story": "Input für Best-in-Class. Das fliesst in das Modul «Benchmark Schweiz» ein.",
       "inputType": "textarea",
       "required": false,
       "answers": [],
@@ -661,45 +594,38 @@
       ],
       "area": "Tools & Daten",
       "text": "Wo liegt heute das wichtigste Kunden- und Anfragewissen?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Datenrisiko und Suchzeit. Das fliesst in das Modul «Suchzeit / Wissen» ein.",
-      "inputType": "choice",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "So wird sichtbar, ob Wissen zentral zugänglich ist oder über Mails, Listen, Papier und Köpfe verteilt bleibt.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "crm_branchensoftware",
-          "label": "CRM / Branchensoftware",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "CRM / Branchensoftware"
         },
         {
           "value": "excel_liste",
-          "label": "Excel-Liste",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Excel-Liste"
         },
         {
           "value": "outlook_e_mail",
-          "label": "Outlook / E-Mail",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Outlook / E-Mail"
         },
         {
           "value": "papier_notizen",
-          "label": "Papier / Notizen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Papier / Notizen"
         },
         {
           "value": "kopf_wissen_einzelner_personen",
-          "label": "Kopf-Wissen einzelner Personen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kopf-Wissen einzelner Personen"
         },
         {
           "value": "mehrere_orte",
-          "label": "mehrere Orte",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "mehrere Orte"
         },
         {
           "value": "unklar",
-          "label": "unklar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "unklar"
         }
       ],
       "excelSource": {
@@ -707,7 +633,8 @@
         "id": "GF15",
         "module": "Suchzeit / Wissen",
         "why": "Datenrisiko und Suchzeit"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "GF16",
@@ -717,34 +644,29 @@
       "area": "Tools & Daten",
       "text": "Gibt es eine zentrale Wahrheit für offene Anfragen und Kundenstatus?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: CRM-/Prozessreife. Das fliesst in das Modul «Tools & Daten» ein.",
+      "story": "CRM-/Prozessreife. Das fliesst in das Modul «Tools & Daten» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "ja_eine_zentrale_quelle",
-          "label": "ja, eine zentrale Quelle",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "ja, eine zentrale Quelle"
         },
         {
           "value": "teilweise_zentral",
-          "label": "teilweise zentral",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "teilweise zentral"
         },
         {
           "value": "mehrere_listen_tools",
-          "label": "mehrere Listen / Tools",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "mehrere Listen / Tools"
         },
         {
           "value": "viel_in_e_mail_kopf_papier",
-          "label": "viel in E-Mail / Kopf / Papier",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "viel in E-Mail / Kopf / Papier"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -760,56 +682,47 @@
         "geschaeftsfuehrung"
       ],
       "area": "Tools & Daten",
-      "text": "Welche Tools werden im Alltag wirklich genutzt?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Integrations- und Automationsbasis. Das fliesst in das Modul «Tools & Daten» ein.",
-      "inputType": "choice",
+      "text": "Welche Tools nutzt ihr im Alltag wirklich?",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Damit wird sichtbar, wo Informationen verteilt sind und wo ein klarerer Ablauf helfen kann.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "outlook",
-          "label": "Outlook",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Outlook"
         },
         {
           "value": "excel",
-          "label": "Excel",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Excel"
         },
         {
           "value": "ms_365_sharepoint_onedrive",
-          "label": "MS 365 / SharePoint / OneDrive",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "MS 365 / SharePoint / OneDrive"
         },
         {
           "value": "crm",
-          "label": "CRM",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "CRM"
         },
         {
           "value": "branchensoftware",
-          "label": "Branchensoftware",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Branchensoftware"
         },
         {
           "value": "whatsapp",
-          "label": "WhatsApp",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "WhatsApp"
         },
         {
           "value": "papier_notizbuch",
-          "label": "Papier / Notizbuch",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Papier / Notizbuch"
         },
         {
           "value": "kopf_wissen",
-          "label": "Kopf-Wissen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kopf-Wissen"
         },
         {
           "value": "gemischt",
-          "label": "Gemischt",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Gemischt"
         }
       ],
       "excelSource": {
@@ -817,7 +730,8 @@
         "id": "GF17",
         "module": "Tools & Daten",
         "why": "Integrations- und Automationsbasis"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "GF18",
@@ -827,34 +741,29 @@
       "area": "Wissen & Übergabe",
       "text": "Wie stark hängt der Ablauf an einzelnen Personen?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Key-Person-Risk. Das fliesst in das Modul «EBIT / Übergabe» ein.",
+      "story": "Key-Person-Risk. Das fliesst in das Modul «EBIT / Übergabe» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "ja",
-          "label": "Ja",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Ja"
         },
         {
           "value": "nein",
-          "label": "Nein",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Nein"
         },
         {
           "value": "teilweise",
-          "label": "Teilweise",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Teilweise"
         },
         {
           "value": "nicht_sichtbar",
-          "label": "Nicht sichtbar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Nicht sichtbar"
         },
         {
           "value": "weiss_nicht",
-          "label": "Weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Weiss nicht"
         }
       ],
       "excelSource": {
@@ -872,34 +781,29 @@
       "area": "Wissen & Übergabe",
       "text": "Ist Verkauf, Nachfolge oder Übergabe der Firma in den nächsten Jahren ein Thema?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt. Optional, wenn du dazu etwas sagen kannst.",
-      "story": "Warum wir das fragen: Unternehmenswert-Risiko. Das fliesst in das Modul «EBIT / Übergabe» ein.",
+      "story": "Unternehmenswert-Risiko. Das fliesst in das Modul «EBIT / Übergabe» ein.",
       "inputType": "choice",
       "required": false,
       "answers": [
         {
           "value": "ja_in_0_2_jahren_relevant",
-          "label": "ja, in 0–2 Jahren relevant",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "ja, in 0–2 Jahren relevant"
         },
         {
           "value": "ja_in_3_5_jahren_relevant",
-          "label": "ja, in 3–5 Jahren relevant",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "ja, in 3–5 Jahren relevant"
         },
         {
           "value": "vielleicht_spaeter",
-          "label": "vielleicht später",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "vielleicht später"
         },
         {
           "value": "aktuell_nicht_relevant",
-          "label": "aktuell nicht relevant",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "aktuell nicht relevant"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -915,46 +819,39 @@
         "geschaeftsfuehrung"
       ],
       "area": "Umsetzung",
-      "text": "Was wäre für Sie der wichtigste Quick Win?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Umsetzungsfokus. Das fliesst in das Modul «30-60-90 Plan» ein.",
-      "inputType": "choice",
+      "text": "Welche schnellen Verbesserungen würden euch am meisten helfen?",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Damit priorisieren wir nicht nach Theorie, sondern nach dem, was im Betrieb wirklich Wirkung hätte.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "zentraler_anfrageeingang",
-          "label": "zentraler Anfrageeingang",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "zentraler Anfrageeingang"
         },
         {
           "value": "besseres_anfrageformular",
-          "label": "besseres Anfrageformular",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "besseres Anfrageformular"
         },
         {
           "value": "automatische_rueckfrage_mail",
-          "label": "automatische Rückfrage-Mail",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "automatische Rückfrage-Mail"
         },
         {
           "value": "klare_wiedervorlage",
-          "label": "klare Wiedervorlage",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "klare Wiedervorlage"
         },
         {
           "value": "telefonleitfaden_qualifizierungsfragen",
-          "label": "Telefonleitfaden / Qualifizierungsfragen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Telefonleitfaden / Qualifizierungsfragen"
         },
         {
           "value": "crm_lead_liste",
-          "label": "CRM-/Lead-Liste",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "CRM-/Lead-Liste"
         },
         {
           "value": "erst_prozess_klaeren",
-          "label": "erst Prozess klären",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "erst Prozess klären"
         }
       ],
       "excelSource": {
@@ -962,7 +859,8 @@
         "id": "GF20",
         "module": "30-60-90 Plan",
         "why": "Umsetzungsfokus"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "MA01",
@@ -970,51 +868,43 @@
         "team"
       ],
       "area": "Anfrageeingang",
-      "text": "Wie kommen Anfragen bei dir meistens an?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Kanäle verstehen. Das fliesst in das Modul «Anfrageprozess» ein.",
-      "inputType": "choice",
+      "text": "Über welche Wege kommen Anfragen bei euch im Alltag rein?",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "So erkennen wir, welche Kanäle wirklich genutzt werden und wo schnell etwas untergeht.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "telefon",
-          "label": "Telefon",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Telefon"
         },
         {
           "value": "e_mail",
-          "label": "E-Mail",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "E-Mail"
         },
         {
           "value": "website",
-          "label": "Website",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Website"
         },
         {
           "value": "whatsapp",
-          "label": "WhatsApp",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "WhatsApp"
         },
         {
           "value": "empfehlung",
-          "label": "Empfehlung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Empfehlung"
         },
         {
           "value": "social_media",
-          "label": "Social Media",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Social Media"
         },
         {
           "value": "gemischt_mehrere_kanaele",
-          "label": "Gemischt / mehrere Kanäle",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Gemischt / mehrere Kanäle"
         },
         {
           "value": "weiss_nicht",
-          "label": "Weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Weiss nicht"
         }
       ],
       "excelSource": {
@@ -1022,7 +912,8 @@
         "id": "MA01",
         "module": "Anfrageprozess",
         "why": "Kanäle verstehen"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "MA02",
@@ -1032,34 +923,29 @@
       "area": "Zuständigkeit",
       "text": "Wie klar ist, wer als Nächstes etwas tun muss?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Verantwortung. Das fliesst in das Modul «Prozessrisiko» ein.",
+      "story": "Verantwortung. Das fliesst in das Modul «Prozessrisiko» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "klar_geregelt",
-          "label": "klar geregelt",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "klar geregelt"
         },
         {
           "value": "meistens_klar",
-          "label": "meistens klar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "meistens klar"
         },
         {
           "value": "personenabhaengig",
-          "label": "personenabhängig",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "personenabhängig"
         },
         {
           "value": "unklar",
-          "label": "unklar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "unklar"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -1077,39 +963,33 @@
       "area": "Suchen",
       "text": "Wie oft suchst du Kunden-, Anfrage- oder Offerteninfos?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Suchzeit. Das fliesst in das Modul «Suchzeit / Daten» ein.",
+      "story": "Suchzeit. Das fliesst in das Modul «Suchzeit / Daten» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "nie_fast_nie",
-          "label": "nie / fast nie",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "nie / fast nie"
         },
         {
           "value": "selten",
-          "label": "selten",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "selten"
         },
         {
           "value": "manchmal",
-          "label": "manchmal",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "manchmal"
         },
         {
           "value": "haeufig",
-          "label": "häufig",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "häufig"
         },
         {
           "value": "taeglich",
-          "label": "täglich",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "täglich"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -1125,46 +1005,39 @@
         "team"
       ],
       "area": "Suchen",
-      "text": "Wo suchst du am häufigsten?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Tool-Brüche. Das fliesst in das Modul «Suchzeit / Daten» ein.",
-      "inputType": "choice",
+      "text": "Wo suchst du im Alltag am häufigsten nach Kunden-, Anfrage- oder Offerteninfos?",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Suchen kostet Zeit. Hier sehen wir, wo Informationen fehlen oder zu stark verteilt sind.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "crm_branchensoftware",
-          "label": "CRM / Branchensoftware",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "CRM / Branchensoftware"
         },
         {
           "value": "excel_liste",
-          "label": "Excel-Liste",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Excel-Liste"
         },
         {
           "value": "outlook_e_mail",
-          "label": "Outlook / E-Mail",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Outlook / E-Mail"
         },
         {
           "value": "papier_notizen",
-          "label": "Papier / Notizen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Papier / Notizen"
         },
         {
           "value": "kopf_wissen_einzelner_personen",
-          "label": "Kopf-Wissen einzelner Personen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kopf-Wissen einzelner Personen"
         },
         {
           "value": "mehrere_orte",
-          "label": "mehrere Orte",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "mehrere Orte"
         },
         {
           "value": "unklar",
-          "label": "unklar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "unklar"
         }
       ],
       "excelSource": {
@@ -1172,7 +1045,8 @@
         "id": "MA04",
         "module": "Suchzeit / Daten",
         "why": "Tool-Brüche"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "MA05",
@@ -1182,34 +1056,29 @@
       "area": "Daten",
       "text": "Gibt es eine zentrale Stelle, wo der aktuelle Stand einer Anfrage sichtbar ist?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Single Source of Truth. Das fliesst in das Modul «Tools & Daten» ein.",
+      "story": "Single Source of Truth. Das fliesst in das Modul «Tools & Daten» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "ja_eine_zentrale_quelle",
-          "label": "ja, eine zentrale Quelle",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "ja, eine zentrale Quelle"
         },
         {
           "value": "teilweise_zentral",
-          "label": "teilweise zentral",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "teilweise zentral"
         },
         {
           "value": "mehrere_listen_tools",
-          "label": "mehrere Listen / Tools",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "mehrere Listen / Tools"
         },
         {
           "value": "viel_in_e_mail_kopf_papier",
-          "label": "viel in E-Mail / Kopf / Papier",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "viel in E-Mail / Kopf / Papier"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -1227,39 +1096,33 @@
       "area": "Daten",
       "text": "Wie oft müssen Informationen doppelt eingetragen oder weiterkopiert werden?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Doppelarbeit. Das fliesst in das Modul «Automation» ein.",
+      "story": "Doppelarbeit. Das fliesst in das Modul «Automation» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "nie_fast_nie",
-          "label": "nie / fast nie",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "nie / fast nie"
         },
         {
           "value": "selten",
-          "label": "selten",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "selten"
         },
         {
           "value": "manchmal",
-          "label": "manchmal",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "manchmal"
         },
         {
           "value": "haeufig",
-          "label": "häufig",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "häufig"
         },
         {
           "value": "taeglich",
-          "label": "täglich",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "täglich"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -1277,39 +1140,33 @@
       "area": "Qualifizierung",
       "text": "Wie oft fehlen bei neuen Anfragen wichtige Informationen?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Rückfragen und Verzögerung. Das fliesst in das Modul «Qualifizierung» ein.",
+      "story": "Rückfragen und Verzögerung. Das fliesst in das Modul «Qualifizierung» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "nie_fast_nie",
-          "label": "nie / fast nie",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "nie / fast nie"
         },
         {
           "value": "selten",
-          "label": "selten",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "selten"
         },
         {
           "value": "manchmal",
-          "label": "manchmal",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "manchmal"
         },
         {
           "value": "haeufig",
-          "label": "häufig",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "häufig"
         },
         {
           "value": "taeglich",
-          "label": "täglich",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "täglich"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -1327,34 +1184,29 @@
       "area": "Nachfassen",
       "text": "Wie klar ist geregelt, wann und wie nachgefasst wird?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Folgechance sichern. Das fliesst in das Modul «Nachfassen» ein.",
+      "story": "Folgechance sichern. Das fliesst in das Modul «Nachfassen» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "klar_geregelt",
-          "label": "klar geregelt",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "klar geregelt"
         },
         {
           "value": "meistens_klar",
-          "label": "meistens klar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "meistens klar"
         },
         {
           "value": "personenabhaengig",
-          "label": "personenabhängig",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "personenabhängig"
         },
         {
           "value": "unklar",
-          "label": "unklar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "unklar"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -1371,40 +1223,34 @@
       ],
       "area": "Kundenerlebnis",
       "text": "Was hörst du von Kunden am häufigsten?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Kundenperspektive. Das fliesst in das Modul «Value Proposition» ein.",
-      "inputType": "choice",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Kundenperspektive. Das fliesst in das Modul «Value Proposition» ein.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "schnelle_rueckmeldung_wird_gelobt",
-          "label": "schnelle Rückmeldung wird gelobt",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "schnelle Rückmeldung wird gelobt"
         },
         {
           "value": "kunde_wartet_auf_antwort",
-          "label": "Kunde wartet auf Antwort",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kunde wartet auf Antwort"
         },
         {
           "value": "kunde_ist_unsicher_ob_anfrage_angekommen",
-          "label": "Kunde ist unsicher, ob Anfrage angekommen ist",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kunde ist unsicher, ob Anfrage angekommen ist"
         },
         {
           "value": "kunde_braucht_mehr_erklaerung",
-          "label": "Kunde braucht mehr Erklärung",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kunde braucht mehr Erklärung"
         },
         {
           "value": "kunde_hat_mehrere_anbieter_angefragt",
-          "label": "Kunde hat mehrere Anbieter angefragt",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kunde hat mehrere Anbieter angefragt"
         },
         {
           "value": "bekomme_ich_selten_mit",
-          "label": "bekomme ich selten mit",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "bekomme ich selten mit"
         }
       ],
       "excelSource": {
@@ -1412,7 +1258,8 @@
         "id": "MA09",
         "module": "Value Proposition",
         "why": "Kundenperspektive"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "MA10",
@@ -1420,51 +1267,43 @@
         "team"
       ],
       "area": "Zeitfresser",
-      "text": "Was kostet im Alltag am meisten Zeit?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Quick Win identifizieren. Das fliesst in das Modul «30-60-90 Plan» ein.",
-      "inputType": "choice",
+      "text": "Was kostet dich im Alltag am meisten Zeit?",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Das zeigt, wo Entlastung schnell spürbar wäre, ohne den ganzen Betrieb umzubauen.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "anfrage_wird_zu_spaet_gesehen",
-          "label": "Anfrage wird zu spät gesehen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Anfrage wird zu spät gesehen"
         },
         {
           "value": "zustaendigkeit_unklar",
-          "label": "Zuständigkeit unklar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Zuständigkeit unklar"
         },
         {
           "value": "infos_fehlen",
-          "label": "Infos fehlen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Infos fehlen"
         },
         {
           "value": "nachfassen_fehlt",
-          "label": "Nachfassen fehlt",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Nachfassen fehlt"
         },
         {
           "value": "zu_viele_kanaele",
-          "label": "zu viele Kanäle",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "zu viele Kanäle"
         },
         {
           "value": "kunde_nicht_qualifiziert",
-          "label": "Kunde nicht qualifiziert",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kunde nicht qualifiziert"
         },
         {
           "value": "kein_klares_problem",
-          "label": "kein klares Problem",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "kein klares Problem"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -1472,7 +1311,8 @@
         "id": "MA10",
         "module": "30-60-90 Plan",
         "why": "Quick Win identifizieren"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "MA11",
@@ -1480,56 +1320,47 @@
         "team"
       ],
       "area": "Tools",
-      "text": "Welche Tools nutzt du wirklich täglich?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Umsetzbarkeit. Das fliesst in das Modul «Tools & Daten» ein.",
-      "inputType": "choice",
+      "text": "Welche Tools nutzt du im Alltag wirklich?",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "So erkennen wir, wo du arbeitest und wo heute schon Daten, Mails oder Aufgaben hängen.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "outlook",
-          "label": "Outlook",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Outlook"
         },
         {
           "value": "excel",
-          "label": "Excel",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Excel"
         },
         {
           "value": "ms_365_sharepoint_onedrive",
-          "label": "MS 365 / SharePoint / OneDrive",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "MS 365 / SharePoint / OneDrive"
         },
         {
           "value": "crm",
-          "label": "CRM",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "CRM"
         },
         {
           "value": "branchensoftware",
-          "label": "Branchensoftware",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Branchensoftware"
         },
         {
           "value": "whatsapp",
-          "label": "WhatsApp",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "WhatsApp"
         },
         {
           "value": "papier_notizbuch",
-          "label": "Papier / Notizbuch",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Papier / Notizbuch"
         },
         {
           "value": "kopf_wissen",
-          "label": "Kopf-Wissen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Kopf-Wissen"
         },
         {
           "value": "gemischt",
-          "label": "Gemischt",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Gemischt"
         }
       ],
       "excelSource": {
@@ -1537,7 +1368,8 @@
         "id": "MA11",
         "module": "Tools & Daten",
         "why": "Umsetzbarkeit"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "MA12",
@@ -1547,34 +1379,29 @@
       "area": "Wissen",
       "text": "Wie gut ist die Kundenhistorie nachvollziehbar, wenn jemand anders übernimmt?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Key-Person-Risk. Das fliesst in das Modul «Wissen / Übergabe» ein.",
+      "story": "Key-Person-Risk. Das fliesst in das Modul «Wissen / Übergabe» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "klar_geregelt",
-          "label": "klar geregelt",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "klar geregelt"
         },
         {
           "value": "meistens_klar",
-          "label": "meistens klar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "meistens klar"
         },
         {
           "value": "personenabhaengig",
-          "label": "personenabhängig",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "personenabhängig"
         },
         {
           "value": "unklar",
-          "label": "unklar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "unklar"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -1592,39 +1419,33 @@
       "area": "Wissen",
       "text": "Wie oft hängt die Antwort davon ab, dass man die richtige Person fragt?",
       "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Kopf-Wissen. Das fliesst in das Modul «Wissen / Übergabe» ein.",
+      "story": "Kopf-Wissen. Das fliesst in das Modul «Wissen / Übergabe» ein.",
       "inputType": "choice",
       "required": true,
       "answers": [
         {
           "value": "nie_fast_nie",
-          "label": "nie / fast nie",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "nie / fast nie"
         },
         {
           "value": "selten",
-          "label": "selten",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "selten"
         },
         {
           "value": "manchmal",
-          "label": "manchmal",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "manchmal"
         },
         {
           "value": "haeufig",
-          "label": "häufig",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "häufig"
         },
         {
           "value": "taeglich",
-          "label": "täglich",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "täglich"
         },
         {
           "value": "weiss_nicht",
-          "label": "weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "weiss nicht"
         }
       ],
       "excelSource": {
@@ -1640,46 +1461,39 @@
         "team"
       ],
       "area": "Umsetzung",
-      "text": "Welcher Quick Win würde dir sofort helfen?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Akzeptanz und Nutzen. Das fliesst in das Modul «30-60-90 Plan» ein.",
-      "inputType": "choice",
+      "text": "Welche schnellen Verbesserungen würden dir sofort helfen?",
+      "helper": "Mehrere Antworten möglich. Wähle alles aus, was im Alltag wirklich vorkommt.",
+      "story": "Hier sammeln wir die konkreten Hebel aus dem Alltag der Personen, die den Prozess wirklich erleben.",
+      "inputType": "multiChoice",
       "required": true,
       "answers": [
         {
           "value": "zentraler_anfrageeingang",
-          "label": "zentraler Anfrageeingang",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "zentraler Anfrageeingang"
         },
         {
           "value": "besseres_anfrageformular",
-          "label": "besseres Anfrageformular",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "besseres Anfrageformular"
         },
         {
           "value": "automatische_rueckfrage_mail",
-          "label": "automatische Rückfrage-Mail",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "automatische Rückfrage-Mail"
         },
         {
           "value": "klare_wiedervorlage",
-          "label": "klare Wiedervorlage",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "klare Wiedervorlage"
         },
         {
           "value": "telefonleitfaden_qualifizierungsfragen",
-          "label": "Telefonleitfaden / Qualifizierungsfragen",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Telefonleitfaden / Qualifizierungsfragen"
         },
         {
           "value": "crm_lead_liste",
-          "label": "CRM-/Lead-Liste",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "CRM-/Lead-Liste"
         },
         {
           "value": "erst_prozess_klaeren",
-          "label": "erst Prozess klären",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "erst Prozess klären"
         }
       ],
       "excelSource": {
@@ -1687,7 +1501,8 @@
         "id": "MA14",
         "module": "30-60-90 Plan",
         "why": "Akzeptanz und Nutzen"
-      }
+      },
+      "multiSelect": true
     },
     {
       "id": "MA15",
@@ -1696,35 +1511,30 @@
       ],
       "area": "Offenheit",
       "text": "Wie offen wärst du für einen klareren digitalen Ablauf?",
-      "helper": "Bitte die Antwort wählen, die dem Alltag am nächsten kommt.",
-      "story": "Warum wir das fragen: Change Readiness. Das fliesst in das Modul «Umsetzung» ein.",
-      "inputType": "choice",
+      "helper": "Wähle zuerst eine Einschätzung. Danach kannst du kurz ergänzen, welche Abläufe dir konkret helfen würden.",
+      "story": "So sehen wir, ob eine Lösung im Alltag angenommen würde und wo ein klarer Ablauf wirklich entlastet.",
+      "inputType": "choiceWithText",
       "required": true,
       "answers": [
         {
           "value": "ja",
-          "label": "Ja",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Ja"
         },
         {
           "value": "nein",
-          "label": "Nein",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Nein"
         },
         {
           "value": "teilweise",
-          "label": "Teilweise",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Teilweise"
         },
         {
           "value": "nicht_sichtbar",
-          "label": "Nicht sichtbar",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Nicht sichtbar"
         },
         {
           "value": "weiss_nicht",
-          "label": "Weiss nicht",
-          "insight": "Danke. Diese Antwort hilft, den späteren Fahrplan sauber zu priorisieren."
+          "label": "Weiss nicht"
         }
       ],
       "excelSource": {
@@ -1732,6 +1542,11 @@
         "id": "MA15",
         "module": "Umsetzung",
         "why": "Change Readiness"
+      },
+      "followUp": {
+        "label": "Welche Abläufe oder wiederkehrenden Aufgaben würden dir konkret helfen?",
+        "placeholder": "Zum Beispiel: Copy-Paste, Infos suchen, Termine abstimmen, Mails nachfassen, WhatsApp übertragen, Offertenstatus prüfen …",
+        "required": true
       }
     }
   ]
