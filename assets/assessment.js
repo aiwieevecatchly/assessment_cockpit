@@ -1768,13 +1768,27 @@ const roleAliases = {
   sonstiges: ['team', 'mitarbeitende']
 };
 
-function init() {
+function getUrlContext() {
   const params = new URLSearchParams(window.location.search);
-  state.leadId = params.get('lead_id') || params.get('leadId') || '';
-  state.assessmentId = params.get('assessment_id') || params.get('assessmentId') || '';
-  state.department = params.get('department') || '';
-  state.source = params.get('source') || '';
-  state.firmaFromUrl = params.get('firma') || params.get('company') || '';
+
+  // Wichtig: Das Sales-/Setup-Cockpit erzeugt snake_case Parameter.
+  // camelCase bleibt nur als Fallback für ältere Tests erhalten.
+  return {
+    leadId: params.get('lead_id') || params.get('leadId') || '',
+    assessmentId: params.get('assessment_id') || params.get('assessmentId') || '',
+    firma: params.get('firma') || params.get('company') || '',
+    department: params.get('department') || params.get('departmentId') || '',
+    source: params.get('source') || ''
+  };
+}
+
+function init() {
+  const urlContext = getUrlContext();
+  state.leadId = urlContext.leadId;
+  state.assessmentId = urlContext.assessmentId;
+  state.department = urlContext.department;
+  state.source = urlContext.source;
+  state.firmaFromUrl = urlContext.firma;
   $('company').value = state.firmaFromUrl;
   if ($('department')) $('department').value = state.department;
   if ($('source')) $('source').value = state.source;
@@ -1831,10 +1845,23 @@ function fillTestCustomer() {
 }
 
 function updateDebugStatus() {
-  const text = state.leadId && state.assessmentId
-    ? 'Assessment verbunden'
-    : 'Testmodus: Keine Lead-ID oder Assessment-ID übergeben';
+  let text = 'Testmodus: Keine Lead-ID oder Assessment-ID übergeben';
+  if (state.leadId && state.assessmentId) {
+    text = 'Assessment verbunden';
+  } else if (state.assessmentId && !state.leadId) {
+    text = 'Assessment-ID vorhanden, Lead-ID fehlt';
+  } else if (state.leadId && !state.assessmentId) {
+    text = 'Lead-ID vorhanden, Assessment-ID fehlt';
+  }
+
   if ($('debugStatusText')) $('debugStatusText').textContent = text;
+}
+
+function connectionMode() {
+  if (state.leadId && state.assessmentId) return 'connected';
+  if (state.assessmentId && !state.leadId) return 'assessment_id_only';
+  if (state.leadId && !state.assessmentId) return 'lead_id_only';
+  return 'testmode';
 }
 
 function handleIdentitySubmit(event) {
@@ -2117,9 +2144,12 @@ function buildPayload() {
     responseId,
     rowType: 'answer',
     answerIndex: index + 1,
+    lead_id: state.leadId || '',
+    assessment_id: state.assessmentId || '',
+    firma: state.participant.company || state.firmaFromUrl || '',
     leadId: state.leadId || '',
     assessmentId: state.assessmentId || '',
-    company: state.participant.company || '',
+    company: state.participant.company || state.firmaFromUrl || '',
     participantFirstName: state.participant.firstName || '',
     participantLastName: state.participant.lastName || '',
     participantEmail: state.participant.email || '',
@@ -2145,8 +2175,11 @@ function buildPayload() {
 
   return {
     type: 'catchly-assessment-response',
-    version: '12.0',
+    version: '15.0',
     responseId,
+    lead_id: state.leadId || '',
+    assessment_id: state.assessmentId || '',
+    firma: state.participant.company || state.firmaFromUrl || '',
     questionnaire: {
       name: 'Catchly Routencheck',
       sourceWorkbook: 'Catchly_Assessment_Fundament_final.xlsx',
@@ -2155,14 +2188,17 @@ function buildPayload() {
       answeredCount: answers.length
     },
     lead: {
+      lead_id: state.leadId || '',
+      assessment_id: state.assessmentId || '',
+      firma: state.participant.company || state.firmaFromUrl || '',
       leadId: state.leadId || '',
       assessmentId: state.assessmentId || '',
       department: state.department || state.participant.department || '',
       source: state.source || state.participant.source || '',
       sourceUrl: window.location.href,
-      mode: state.leadId && state.assessmentId ? 'connected' : 'testmode'
+      mode: connectionMode()
     },
-    company: state.participant.company || '',
+    company: state.participant.company || state.firmaFromUrl || '',
     participant: state.participant,
     answers,
     meta: {
@@ -2171,7 +2207,7 @@ function buildPayload() {
       completedAt: state.participant.completedAt || '',
       submittedAt: new Date().toISOString(),
       sourceUrl: window.location.href,
-      mode: state.leadId && state.assessmentId ? 'connected' : 'testmode'
+      mode: connectionMode()
     }
   };
 }
@@ -2195,8 +2231,10 @@ function downloadCsv() {
   const payload = buildPayload();
   const rows = payload.answers.map((answer) => ({
     responseId: answer.responseId,
+    lead_id: answer.lead_id || answer.leadId,
+    assessment_id: answer.assessment_id || answer.assessmentId,
+    firma: answer.firma || answer.company,
     leadId: answer.leadId,
-    firma: answer.company,
     vorname: answer.participantFirstName,
     name: answer.participantLastName,
     email: answer.participantEmail,

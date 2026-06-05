@@ -199,7 +199,7 @@ function ensureAssessmentId() {
 function fillSetupTestCustomer() {
   state.setup = {
     type: 'catchly-assessment-setup',
-    version: '14.0-test',
+    version: '15.0-test',
     source: 'testkunde_button'
   };
   state.lead = {
@@ -583,7 +583,7 @@ function exportSetup() {
 
   const updated = {
     type: 'catchly-assessment-setup',
-    version: '14.0',
+    version: '15.0',
     updatedAt: new Date().toISOString(),
     lead: {
       required: {
