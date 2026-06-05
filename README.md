@@ -1,4 +1,4 @@
-# Catchly Assessment Cockpit V17
+# Catchly Assessment Cockpit V18
 
 Änderungen gegenüber V15:
 
@@ -9,7 +9,7 @@
 - Keine echte API, keine Webhook-URL, keine Secrets.
 
 
-## V17
+## V18
 
 - Payload trennt `lead_company`, `participant_company` und `company`.
 - Frontend erzeugt nur `client_response_id`; finale `response_id` bleibt fürs Backend reserviert.
@@ -17,3 +17,8 @@
 - Dezente bewegte Catchly-Formen im Hintergrund.
 - Antwort-Einordnung nutzt kontextbezogenere Nutzenhinweise.
 - Keine Webhooks, keine n8n-URL, keine Secrets.
+
+
+## V18
+
+Frage MA15 wurde mit konditionaler Pflicht-Begründung erweitert: hilfreiche Abläufe bei Ja/Teilweise, Begründung bei Nein/Nicht sichtbar/Weiss nicht. Export bleibt backend-ready.

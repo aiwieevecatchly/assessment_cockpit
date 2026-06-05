@@ -1508,32 +1508,32 @@ const DEFAULT_QUESTIONS = [
     "roles": [
       "team"
     ],
-    "area": "Offenheit",
-    "text": "Wie offen wärst du für einen klareren digitalen Ablauf?",
-    "helper": "Wähle zuerst eine Einschätzung. Danach kannst du kurz ergänzen, welche Abläufe dir konkret helfen würden.",
-    "story": "So sehen wir, ob eine Lösung im Alltag angenommen würde und wo ein klarer Ablauf wirklich entlastet.",
-    "inputType": "choiceWithText",
+    "area": "Umsetzung & Akzeptanz",
+    "text": "Wenn Anfragen, Rückfragen und Termine klarer digital geführt würden: Würde dir das im Alltag helfen?",
+    "helper": "Wähle deine Einschätzung. Je nach Antwort fragen wir kurz nach, was helfen würde oder was im Weg steht.",
+    "story": "Damit erkennen wir nicht nur den Prozess, sondern auch die Bereitschaft im Team. Das ist wichtig, damit eine Lösung später wirklich genutzt wird.",
+    "inputType": "choiceWithConditionalFollowUp",
     "required": true,
     "answers": [
       {
         "value": "ja",
-        "label": "Ja"
-      },
-      {
-        "value": "nein",
-        "label": "Nein"
+        "label": "Ja, das würde helfen"
       },
       {
         "value": "teilweise",
         "label": "Teilweise"
       },
       {
+        "value": "nein",
+        "label": "Nein, eher nicht"
+      },
+      {
         "value": "nicht_sichtbar",
-        "label": "Nicht sichtbar"
+        "label": "Für mich nicht sichtbar"
       },
       {
         "value": "weiss_nicht",
-        "label": "Weiss nicht"
+        "label": "Kann ich nicht beurteilen"
       }
     ],
     "excelSource": {
@@ -1542,10 +1542,80 @@ const DEFAULT_QUESTIONS = [
       "module": "Umsetzung",
       "why": "Change Readiness"
     },
-    "followUp": {
-      "label": "Welche Abläufe oder wiederkehrenden Aufgaben würden dir konkret helfen?",
-      "placeholder": "Zum Beispiel: Copy-Paste, Infos suchen, Termine abstimmen, Mails nachfassen, WhatsApp übertragen, Offertenstatus prüfen …",
-      "required": true
+    "conditionalFollowUp": {
+      "helpful": {
+        "values": [
+          "ja"
+        ],
+        "type": "textarea",
+        "label": "Welche Prozesse oder täglichen Arbeiten würden dir konkret helfen?",
+        "placeholder": "Zum Beispiel: Anfragen sortieren, Termine abstimmen, Infos suchen, Copy-Paste, Mails nachfassen, WhatsApp übertragen …",
+        "required": true
+      },
+      "partial": {
+        "values": [
+          "teilweise"
+        ],
+        "type": "textarea",
+        "label": "Wo würde es helfen und wo eher nicht?",
+        "placeholder": "Kurzer Satz reicht. Zum Beispiel: Bei Terminen ja, bei technischen Abklärungen eher nicht.",
+        "required": true
+      },
+      "barrier": {
+        "values": [
+          "nein",
+          "nicht_sichtbar",
+          "weiss_nicht"
+        ],
+        "type": "reasonChoice",
+        "label": "Was ist der Hauptgrund für deine Einschätzung?",
+        "required": true,
+        "answers": [
+          {
+            "value": "nutzen_nicht_klar",
+            "label": "Der Nutzen ist für mich nicht klar"
+          },
+          {
+            "value": "heute_gut_genug",
+            "label": "Es funktioniert heute gut genug"
+          },
+          {
+            "value": "keine_zeit_umstellung",
+            "label": "Im Alltag fehlt die Zeit für Umstellung"
+          },
+          {
+            "value": "sorge_komplizierter",
+            "label": "Ich habe Sorge, dass es komplizierter wird"
+          },
+          {
+            "value": "unsicherheit_tools",
+            "label": "Unsicherheit mit digitalen Tools"
+          },
+          {
+            "value": "sorge_kontrolle",
+            "label": "Sorge vor Kontrolle oder Überwachung"
+          },
+          {
+            "value": "schlechte_erfahrung",
+            "label": "Schlechte Erfahrungen mit früheren Tools oder Projekten"
+          },
+          {
+            "value": "rollen_unklar",
+            "label": "Rollen und Zuständigkeiten wären unklar"
+          },
+          {
+            "value": "datenschutz_kundendaten",
+            "label": "Datenschutz oder Kundendaten sind ein Thema"
+          },
+          {
+            "value": "anderes",
+            "label": "Anderer Grund"
+          }
+        ],
+        "otherLabel": "Kurz begründen, was dahinter steckt",
+        "otherPlaceholder": "Zum Beispiel: Ich sehe nicht, wo es uns konkret entlasten würde.",
+        "otherRequired": true
+      }
     }
   }
 ];
@@ -1811,13 +1881,27 @@ function renderChoiceAnswer(question) {
     $('answerOptions').appendChild(button);
   });
 
-  if (question.inputType === 'choiceWithText' && question.followUp) {
-    renderFollowUpText(question);
+  const followUp = getActiveFollowUp(question, existing?.value);
+  if (followUp) {
+    renderConditionalFollowUp(question, followUp);
   }
 }
 
 function isMultiChoice(question) {
   return question.inputType === 'multiChoice' || question.multiSelect === true;
+}
+
+function isConditionalFollowUpQuestion(question) {
+  return question.inputType === 'choiceWithText' || question.inputType === 'choiceWithConditionalFollowUp';
+}
+
+function getActiveFollowUp(question, value) {
+  if (!value) return null;
+  if (question.conditionalFollowUp) {
+    const groups = Object.values(question.conditionalFollowUp);
+    return groups.find((item) => (item.values || []).includes(value)) || null;
+  }
+  return question.followUp || null;
 }
 
 function toggleMultiAnswer(question, answer) {
@@ -1858,8 +1942,15 @@ function toggleMultiAnswer(question, answer) {
   renderQuestion();
 }
 
-function renderFollowUpText(question) {
-  const followUp = question.followUp || {};
+function renderConditionalFollowUp(question, followUp) {
+  if (followUp.type === 'reasonChoice') {
+    renderReasonFollowUp(question, followUp);
+    return;
+  }
+  renderTextFollowUp(question, followUp);
+}
+
+function renderTextFollowUp(question, followUp) {
   const wrapper = document.createElement('div');
   wrapper.className = 'field text-answer-card follow-up-card';
   const label = document.createElement('label');
@@ -1867,14 +1958,16 @@ function renderFollowUpText(question) {
   const textarea = document.createElement('textarea');
   textarea.placeholder = followUp.placeholder || 'Kurzer Satz reicht.';
   textarea.value = state.answers[question.id]?.followUpText || '';
+  textarea.required = followUp.required === true;
   textarea.addEventListener('input', () => {
     const existing = state.answers[question.id];
     if (!existing) return;
+    existing.followUpType = followUp.type || 'textarea';
     existing.followUpText = textarea.value.trim();
-    existing.label = combineAnswerLabel(existing.selectedLabels?.join('; ') || existing.label, existing.followUpText);
-    existing.insight = existing.followUpText
-      ? 'Danke. Das macht die spätere Empfehlung deutlich konkreter.'
-      : existing.insight;
+    existing.followUpReasonValue = '';
+    existing.followUpReasonLabel = '';
+    existing.label = combineAnswerLabel(existing.baseLabel || existing.label, existing.followUpText);
+    existing.insight = conditionalFollowUpInsight(question, existing);
     state.answers[question.id] = existing;
     renderInsight(question);
     updateNextButton(question);
@@ -1884,9 +1977,72 @@ function renderFollowUpText(question) {
   $('answerOptions').appendChild(wrapper);
 }
 
-function combineAnswerLabel(baseLabel, followUpText) {
-  if (!followUpText) return baseLabel || '';
-  return `${baseLabel || 'Einschätzung'} | Zusatz: ${followUpText}`;
+function renderReasonFollowUp(question, followUp) {
+  const existing = state.answers[question.id];
+  if (!existing) return;
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'field text-answer-card follow-up-card reason-follow-up-card';
+  const label = document.createElement('label');
+  label.textContent = followUp.label || 'Was ist der Hauptgrund?';
+  wrapper.appendChild(label);
+
+  const grid = document.createElement('div');
+  grid.className = 'choice-grid reason-choice-grid';
+  (followUp.answers || []).forEach((reason) => {
+    const selected = existing.followUpReasonValue === reason.value;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `choice-card reason-choice ${selected ? 'selected' : ''}`;
+    button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+    button.innerHTML = `<span class="choice-main"><strong>${escapeHtml(reason.label)}</strong></span>`;
+    button.addEventListener('click', () => {
+      const current = state.answers[question.id];
+      if (!current) return;
+      current.followUpType = 'reasonChoice';
+      current.followUpReasonValue = reason.value;
+      current.followUpReasonLabel = reason.label || reason.value;
+      if (reason.value !== 'anderes') current.followUpText = '';
+      current.label = combineAnswerLabel(current.baseLabel || current.label, current.followUpReasonLabel, current.followUpText);
+      current.insight = conditionalFollowUpInsight(question, current);
+      state.answers[question.id] = current;
+      renderQuestion();
+    });
+    grid.appendChild(button);
+  });
+  wrapper.appendChild(grid);
+
+  if (existing.followUpReasonValue === 'anderes') {
+    const otherLabel = document.createElement('label');
+    otherLabel.className = 'nested-label';
+    otherLabel.textContent = followUp.otherLabel || 'Kurz begründen';
+    const textarea = document.createElement('textarea');
+    textarea.placeholder = followUp.otherPlaceholder || 'Kurzer Satz reicht.';
+    textarea.value = existing.followUpText || '';
+    textarea.required = followUp.otherRequired === true;
+    textarea.addEventListener('input', () => {
+      const current = state.answers[question.id];
+      if (!current) return;
+      current.followUpText = textarea.value.trim();
+      current.label = combineAnswerLabel(current.baseLabel || current.label, current.followUpReasonLabel, current.followUpText);
+      current.insight = conditionalFollowUpInsight(question, current);
+      state.answers[question.id] = current;
+      renderInsight(question);
+      updateNextButton(question);
+    });
+    wrapper.appendChild(otherLabel);
+    wrapper.appendChild(textarea);
+    setTimeout(() => textarea.focus({ preventScroll: true }), 30);
+  }
+
+  $('answerOptions').appendChild(wrapper);
+}
+
+function combineAnswerLabel(baseLabel, followUpReasonLabel = '', followUpText = '') {
+  const parts = [baseLabel || 'Einschätzung'];
+  if (followUpReasonLabel) parts.push(`Grund: ${followUpReasonLabel}`);
+  if (followUpText) parts.push(`Zusatz: ${followUpText}`);
+  return parts.join(' | ');
 }
 
 function renderTextAnswer(question) {
@@ -1917,39 +2073,82 @@ function renderTextAnswer(question) {
   setTimeout(() => input.focus(), 50);
 }
 
-function updateNextButton(question) {
+function isQuestionComplete(question) {
   const answer = state.answers[question.id];
-  let hasAnswer = Boolean(answer);
+  if (!answer) return question.required === false;
 
   if (isMultiChoice(question)) {
-    hasAnswer = Boolean(answer?.selectedValues?.length);
+    return Boolean(answer.selectedValues?.length) || question.required === false;
   }
 
-  if (question.inputType === 'choiceWithText' && question.followUp?.required) {
-    hasAnswer = Boolean(answer?.value) && Boolean((answer.followUpText || '').trim());
+  if (isConditionalFollowUpQuestion(question)) {
+    const followUp = getActiveFollowUp(question, answer.value);
+    if (followUp?.required) {
+      if (followUp.type === 'reasonChoice') {
+        if (!answer.followUpReasonValue) return false;
+        if (answer.followUpReasonValue === 'anderes' && followUp.otherRequired) {
+          return Boolean((answer.followUpText || '').trim());
+        }
+        return true;
+      }
+      return Boolean((answer.followUpText || '').trim());
+    }
   }
 
-  $('nextBtn').disabled = question.required !== false && !hasAnswer;
-  $('nextBtn').textContent = question.required === false && !hasAnswer ? 'Überspringen' : 'Weiter';
+  return Boolean(answer.value || answer.label || answer.selectedValues?.length) || question.required === false;
+}
+
+function updateNextButton(question) {
+  const complete = isQuestionComplete(question);
+  $('nextBtn').disabled = question.required !== false && !complete;
+  $('nextBtn').textContent = question.required === false && !state.answers[question.id] ? 'Überspringen' : 'Weiter';
 }
 
 function selectAnswer(question, answer) {
-  const existingFollowUp = state.answers[question.id]?.followUpText || '';
+  const existing = state.answers[question.id] || {};
+  const previousFollowUp = getActiveFollowUp(question, existing.value);
+  const nextFollowUp = getActiveFollowUp(question, answer.value);
   const record = buildAnswerRecord(question, answer);
-  if (question.inputType === 'choiceWithText') {
-    record.followUpText = existingFollowUp;
-    record.label = combineAnswerLabel(record.label, existingFollowUp);
+
+  if (isConditionalFollowUpQuestion(question)) {
+    record.baseLabel = record.label;
+    record.followUpType = nextFollowUp?.type || '';
+    if (previousFollowUp?.type === nextFollowUp?.type) {
+      record.followUpText = existing.followUpText || '';
+      record.followUpReasonValue = existing.followUpReasonValue || '';
+      record.followUpReasonLabel = existing.followUpReasonLabel || '';
+      record.label = combineAnswerLabel(record.baseLabel, record.followUpReasonLabel, record.followUpText);
+    }
+    record.insight = conditionalFollowUpInsight(question, record);
   }
+
   state.answers[question.id] = record;
   renderQuestion();
   window.setTimeout(() => {
-    const followUp = $('answerOptions').querySelector('.follow-up-card textarea');
+    const followUp = $('answerOptions').querySelector('.follow-up-card textarea, .follow-up-card button');
     const next = $('nextBtn');
     if (followUp) followUp.focus({ preventScroll: true });
     else if (next && !next.disabled) next.focus({ preventScroll: true });
   }, 30);
 }
 
+function conditionalFollowUpInsight(question, answer) {
+  if (question.id !== 'MA15') return contextualInsight(question, answer);
+  const value = String(answer.value || '');
+  if (value === 'ja') {
+    if (answer.followUpText) return 'Danke. Genau solche konkreten Aufgaben zeigen, wo eine Lösung im Alltag schnell entlasten könnte.';
+    return 'Danke. Wenn du gleich konkretisierst, welche Arbeiten helfen würden, wird die spätere Empfehlung deutlich präziser.';
+  }
+  if (value === 'teilweise') {
+    if (answer.followUpText) return 'Danke. Diese Differenzierung ist wertvoll: Sie zeigt, wo Automation helfen kann und wo der persönliche Ablauf bewusst bleiben sollte.';
+    return 'Danke. Teilweise ist oft die ehrlichste Antwort. Die Ergänzung hilft uns, die sinnvollen Grenzen sauber zu erkennen.';
+  }
+  if (['nein', 'nicht_sichtbar', 'weiss_nicht'].includes(value)) {
+    if (answer.followUpReasonValue) return 'Danke. Die Begründung ist wichtig, weil sie zeigt, ob es um Nutzen, Vertrauen, Zeit, Tools oder Kultur geht.';
+    return 'Danke. Bitte wähle noch den Hauptgrund. Gerade kritische Einschätzungen helfen, die Umsetzung realistisch zu planen.';
+  }
+  return contextualInsight(question, answer);
+}
 
 function isGenericInsight(text) {
   const value = String(text || '').trim().toLowerCase();
@@ -2024,6 +2223,10 @@ function buildAnswerRecord(question, answer) {
     selectedValues: answer.selectedValues || [],
     selectedLabels: answer.selectedLabels || [],
     followUpText: answer.followUpText || '',
+    followUpType: answer.followUpType || '',
+    followUpReasonValue: answer.followUpReasonValue || '',
+    followUpReasonLabel: answer.followUpReasonLabel || '',
+    baseLabel: answer.baseLabel || answer.label || answer.value || '',
     insight: insightForAnswer(question, answer),
     required: question.required !== false,
     inputType: question.inputType || 'choice',
@@ -2083,8 +2286,7 @@ function handleKeyboardNavigation(event) {
 
   const question = state.activeQuestions[state.index];
   if (!question) return;
-  const hasAnswer = Boolean(state.answers[question.id]);
-  if (question.required !== false && !hasAnswer) return;
+  if (question.required !== false && !isQuestionComplete(question)) return;
 
   event.preventDefault();
   handleNext();
@@ -2092,7 +2294,7 @@ function handleKeyboardNavigation(event) {
 
 function handleNext() {
   const question = state.activeQuestions[state.index];
-  if (question.required !== false && !state.answers[question.id]) return;
+  if (question.required !== false && !isQuestionComplete(question)) return;
   state.index += 1;
 
   if (state.index >= state.activeQuestions.length) {
@@ -2187,6 +2389,9 @@ function buildPayload() {
     selectedValues: answer.selectedValues || [],
     selectedLabels: answer.selectedLabels || [],
     followUpText: answer.followUpText || '',
+    followUpType: answer.followUpType || '',
+    followUpReasonValue: answer.followUpReasonValue || '',
+    followUpReasonLabel: answer.followUpReasonLabel || '',
     insight: answer.insight || '',
     required: answer.required,
     inputType: answer.inputType || '',
@@ -2288,6 +2493,9 @@ function downloadCsv() {
     mehrfachauswahlWerte: Array.isArray(answer.selectedValues) ? answer.selectedValues.join('|') : '',
     mehrfachauswahlTexte: Array.isArray(answer.selectedLabels) ? answer.selectedLabels.join('; ') : '',
     zusatzantwort: answer.followUpText || '',
+    folgefrageTyp: answer.followUpType || '',
+    begruendungWert: answer.followUpReasonValue || '',
+    begruendungText: answer.followUpReasonLabel || '',
     insight: answer.insight,
     pflicht: answer.required ? 'Ja' : 'Nein',
     beantwortetAm: answer.answeredAt,

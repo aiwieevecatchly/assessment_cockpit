@@ -1509,32 +1509,32 @@
       "roles": [
         "team"
       ],
-      "area": "Offenheit",
-      "text": "Wie offen wärst du für einen klareren digitalen Ablauf?",
-      "helper": "Wähle zuerst eine Einschätzung. Danach kannst du kurz ergänzen, welche Abläufe dir konkret helfen würden.",
-      "story": "So sehen wir, ob eine Lösung im Alltag angenommen würde und wo ein klarer Ablauf wirklich entlastet.",
-      "inputType": "choiceWithText",
+      "area": "Umsetzung & Akzeptanz",
+      "text": "Wenn Anfragen, Rückfragen und Termine klarer digital geführt würden: Würde dir das im Alltag helfen?",
+      "helper": "Wähle deine Einschätzung. Je nach Antwort fragen wir kurz nach, was helfen würde oder was im Weg steht.",
+      "story": "Damit erkennen wir nicht nur den Prozess, sondern auch die Bereitschaft im Team. Das ist wichtig, damit eine Lösung später wirklich genutzt wird.",
+      "inputType": "choiceWithConditionalFollowUp",
       "required": true,
       "answers": [
         {
           "value": "ja",
-          "label": "Ja"
-        },
-        {
-          "value": "nein",
-          "label": "Nein"
+          "label": "Ja, das würde helfen"
         },
         {
           "value": "teilweise",
           "label": "Teilweise"
         },
         {
+          "value": "nein",
+          "label": "Nein, eher nicht"
+        },
+        {
           "value": "nicht_sichtbar",
-          "label": "Nicht sichtbar"
+          "label": "Für mich nicht sichtbar"
         },
         {
           "value": "weiss_nicht",
-          "label": "Weiss nicht"
+          "label": "Kann ich nicht beurteilen"
         }
       ],
       "excelSource": {
@@ -1543,10 +1543,80 @@
         "module": "Umsetzung",
         "why": "Change Readiness"
       },
-      "followUp": {
-        "label": "Welche Abläufe oder wiederkehrenden Aufgaben würden dir konkret helfen?",
-        "placeholder": "Zum Beispiel: Copy-Paste, Infos suchen, Termine abstimmen, Mails nachfassen, WhatsApp übertragen, Offertenstatus prüfen …",
-        "required": true
+      "conditionalFollowUp": {
+        "helpful": {
+          "values": [
+            "ja"
+          ],
+          "type": "textarea",
+          "label": "Welche Prozesse oder täglichen Arbeiten würden dir konkret helfen?",
+          "placeholder": "Zum Beispiel: Anfragen sortieren, Termine abstimmen, Infos suchen, Copy-Paste, Mails nachfassen, WhatsApp übertragen …",
+          "required": true
+        },
+        "partial": {
+          "values": [
+            "teilweise"
+          ],
+          "type": "textarea",
+          "label": "Wo würde es helfen und wo eher nicht?",
+          "placeholder": "Kurzer Satz reicht. Zum Beispiel: Bei Terminen ja, bei technischen Abklärungen eher nicht.",
+          "required": true
+        },
+        "barrier": {
+          "values": [
+            "nein",
+            "nicht_sichtbar",
+            "weiss_nicht"
+          ],
+          "type": "reasonChoice",
+          "label": "Was ist der Hauptgrund für deine Einschätzung?",
+          "required": true,
+          "answers": [
+            {
+              "value": "nutzen_nicht_klar",
+              "label": "Der Nutzen ist für mich nicht klar"
+            },
+            {
+              "value": "heute_gut_genug",
+              "label": "Es funktioniert heute gut genug"
+            },
+            {
+              "value": "keine_zeit_umstellung",
+              "label": "Im Alltag fehlt die Zeit für Umstellung"
+            },
+            {
+              "value": "sorge_komplizierter",
+              "label": "Ich habe Sorge, dass es komplizierter wird"
+            },
+            {
+              "value": "unsicherheit_tools",
+              "label": "Unsicherheit mit digitalen Tools"
+            },
+            {
+              "value": "sorge_kontrolle",
+              "label": "Sorge vor Kontrolle oder Überwachung"
+            },
+            {
+              "value": "schlechte_erfahrung",
+              "label": "Schlechte Erfahrungen mit früheren Tools oder Projekten"
+            },
+            {
+              "value": "rollen_unklar",
+              "label": "Rollen und Zuständigkeiten wären unklar"
+            },
+            {
+              "value": "datenschutz_kundendaten",
+              "label": "Datenschutz oder Kundendaten sind ein Thema"
+            },
+            {
+              "value": "anderes",
+              "label": "Anderer Grund"
+            }
+          ],
+          "otherLabel": "Kurz begründen, was dahinter steckt",
+          "otherPlaceholder": "Zum Beispiel: Ich sehe nicht, wo es uns konkret entlasten würde.",
+          "otherRequired": true
+        }
       }
     }
   ]

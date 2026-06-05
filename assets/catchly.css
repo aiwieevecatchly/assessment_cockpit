@@ -1443,3 +1443,27 @@ body {
   .shape-triangle { width: 130px; height: 130px; right: -22px; }
   .shape-ellipse { width: 180px; height: 90px; left: -48px; }
 }
+
+/* V18: konditionale Begründung bei Frage MA15 */
+.reason-follow-up-card {
+  gap: 12px;
+}
+.reason-choice-grid {
+  gap: 10px;
+  margin-top: 8px;
+}
+.reason-choice-grid .choice-card {
+  padding: 13px 15px;
+  box-shadow: 3px 3px 0 var(--black);
+}
+.reason-choice-grid .choice-card strong {
+  font-size: 15px;
+  margin-bottom: 0;
+}
+.nested-label {
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 8px;
+  color: var(--indigo);
+  font-weight: 900;
+}
