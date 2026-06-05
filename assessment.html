@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catchly Routencheck</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/catchly.css">
+</head>
+<body>
+  <main class="assessment-shell">
+    <header class="brand-bar">
+      <a class="logo-lockup" href="#" aria-label="Catchly">
+        <img class="logo-mark" src="assets/logo-mark.png" alt="">
+        <span class="logo-word">Catchly</span>
+      </a>
+      <span class="pill">Routencheck</span>
+    </header>
+
+    <details class="debug-status" id="debugStatus">
+      <summary>Status</summary>
+      <span id="debugStatusText">Testmodus: Keine Lead-ID oder Assessment-ID übergeben</span>
+    </details>
+
+    <section id="welcomeView" class="hero sprinkles">
+      <div class="hero-content">
+        <div class="kicker">Routencheck</div>
+        <h1 class="display-title">Anfragen, die liegen bleiben, sind verlorenes Geld.</h1>
+        <p class="subtitle">Danke, dass du dir kurz Zeit nimmst. Deine Antworten zeigen, wo im Erstkontakt Klarheit, Zeit oder Umsatz verloren gehen.</p>
+        <div class="btn-row">
+          <button class="btn primary" id="startIntroBtn">Los geht’s</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="identityView" class="wizard-card section hidden">
+      <div class="wizard-inner">
+        <div class="kicker">Kurz einchecken</div>
+        <h2 class="clean-title">Wer füllt den Routencheck aus?</h2>
+        <p class="copy">Kurze Angaben, damit die passenden Fragen angezeigt werden.</p>
+        <form id="identityForm">
+          <div id="identityError" class="notice error hidden"></div>
+          <div class="form-row">
+            <div class="field">
+              <label for="firstName">Vorname</label>
+              <input id="firstName" name="firstName" required autocomplete="given-name">
+            </div>
+            <div class="field">
+              <label for="lastName">Name</label>
+              <input id="lastName" name="lastName" required autocomplete="family-name">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="email">E-Mail</label>
+              <input id="email" name="email" type="email" required autocomplete="email">
+            </div>
+            <div class="field">
+              <label for="mobile">Handy optional</label>
+              <input id="mobile" name="mobile" type="tel" autocomplete="tel" placeholder="Für Rückfragen, falls gewünscht">
+            </div>
+          </div>
+          <div class="field">
+            <label for="company">Firma</label>
+            <input id="company" name="company" required autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="role">Rolle im Unternehmen</label>
+            <select id="role" name="role" required>
+              <option value="">Bitte wählen</option>
+              <option value="geschaeftsfuehrung">Geschäftsführung / Inhaber:in</option>
+              <option value="verkauf">Verkauf / Beratung</option>
+              <option value="administration">Administration / Admin</option>
+              <option value="disposition">Disposition / Terminplanung</option>
+              <option value="technik">Projektleitung / Technik</option>
+              <option value="sonstiges">Sonstiges / mehrere Bereiche</option>
+            </select>
+          </div>
+          <input id="department" name="department" type="hidden" value="">
+          <input id="source" name="source" type="hidden" value="">
+          <div class="btn-row split-actions">
+            <button class="btn ghost" id="testCustomerBtn" type="button">Testkunde generieren</button>
+            <button class="btn pink" type="submit">Fragen starten</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="questionView" class="assessment-flow section hidden">
+      <div class="question-layout premium-question-layout">
+        <div class="question-top">
+          <span id="roleChip" class="role-chip">Rolle</span>
+          <div class="progress-wrap">
+            <div class="progress-meta">
+              <span id="progressLabel">Frage 1 von 10</span>
+              <span id="areaLabel">Start</span>
+            </div>
+            <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+          </div>
+        </div>
+
+        <div id="questionScrollArea" class="question-scroll-area">
+          <h2 id="questionText" class="question-text"></h2>
+          <p id="questionHelper" class="question-helper"></p>
+          <div id="questionStory" class="story-note"></div>
+          <div id="answerOptions" class="choice-grid"></div>
+          <div id="answerInsight" class="answer-insight hidden"></div>
+        </div>
+
+        <div class="btn-row question-actions">
+          <button class="btn ghost" id="backBtn" type="button">Zurück</button>
+          <button class="btn primary" id="nextBtn" type="button" disabled>Weiter</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="finalView" class="wizard-card section hidden">
+      <div class="wizard-inner">
+        <span class="final-badge">Geschafft</span>
+        <h2 class="clean-title">Danke. Das hilft richtig weiter.</h2>
+        <p class="subtitle">Aus deinen Antworten entsteht ein klareres Bild, wo der Erstkontakt einfacher, schneller oder verbindlicher werden kann.</p>
+        <div id="backendNotice" class="notice section"></div>
+        <p id="testExportNote" class="test-export-note">Testmodus: Im Live-Betrieb werden die Antworten direkt mit der Auswertung verbunden.</p>
+        <div class="btn-row section" id="downloadActions">
+          <button class="btn primary" id="downloadJsonBtn" type="button">Antworten als JSON</button>
+          <button class="btn ghost" id="downloadCsvBtn" type="button">Antworten als CSV</button>
+          <button class="btn indigo" id="restartBtn" type="button">Nochmals testen</button>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">Catchly Routencheck · Anfragen, die liegen bleiben, sind verlorenes Geld.</p>
+  </main>
+  <script src="assets/assessment.js"></script>
+</body>
+</html>

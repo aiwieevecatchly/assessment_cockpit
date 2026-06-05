@@ -1,0 +1,47 @@
+{
+  "type": "catchly-assessment-setup",
+  "version": "14.0-sample",
+  "lead": {
+    "required": {
+      "leadId": "CATCHLY-2026-000001",
+      "firma": "Muster Haustechnik AG",
+      "kontaktperson": "Robert Keller",
+      "funktionKontaktperson": "Geschäftsführer",
+      "telefon": "+41 61 000 00 00",
+      "emailKontaktperson": "robert.keller@muster.ch",
+      "adresse": "Hauptstrasse 12",
+      "plz": "4051",
+      "ort": "Basel",
+      "branche": "Gebäudetechnik",
+      "region": "Basel"
+    },
+    "optional": {
+      "website": "https://www.muster.ch",
+      "notizenAusColdCall": "Kunde erhält viele Website-Anfragen.",
+      "painAusErstkontakt": "Nachfassen und Terminierung unklar.",
+      "interesseBedarf": "Routencheck gewünscht."
+    }
+  },
+  "erste100Meter": {
+    "outcome": "",
+    "decision": "Offen",
+    "notes": "",
+    "indicators": {
+      "monthlyRelevantRequests": 20,
+      "mainChannel": "gemischt_mehrere_kanaele",
+      "reactionTime": "gleicher_arbeitstag",
+      "avgOrderValueChf": 40000,
+      "notHandledRequests": 6,
+      "mainBottleneck": "zustaendigkeit_unklar",
+      "success90Days": "mehr_passende_termine",
+      "suggestedNextStep": "assessment"
+    }
+  },
+  "participants": [],
+  "assessment": {
+    "assessmentId": "ASM-MUSTER-001",
+    "mode": "id-ready-test",
+    "link": "assessment.html?lead_id=CATCHLY-2026-000001&assessment_id=ASM-MUSTER-001"
+  },
+  "assessment_id": "ASM-CATCHLY-2026-000001-001"
+}

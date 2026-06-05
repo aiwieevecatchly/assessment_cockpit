@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catchly Routencheck Setup V14</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/catchly.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="brand-bar">
+      <a class="logo-lockup" href="#" aria-label="Catchly">
+        <img class="logo-mark" src="assets/logo-mark.png" alt="">
+        <span class="logo-word">Catchly</span>
+      </a>
+      <div class="top-actions">
+        <span class="pill">Internes Setup-Cockpit</span>
+        <button class="btn primary small" id="openRoutecheckTopBtn" type="button">Routencheck öffnen</button>
+      </div>
+    </header>
+
+    <section class="hero sprinkles">
+      <div class="hero-content">
+        <div class="kicker">Routencheck Setup</div>
+        <h1 class="display-title">Vom Fahrplangespräch zur Entscheidung.</h1>
+        <p class="subtitle">Lead importieren, Alltag im Erstkontakt prüfen, Entscheidung festhalten und den nächsten Schritt vorbereiten.</p>
+      </div>
+    </section>
+
+    <section class="section grid two">
+      <div class="card">
+        <h2 class="section-title">1. Lead importieren</h2>
+        <p class="copy">Startpaket aus dem Sales Cockpit auswählen. Lead-ID, Firma, Kontakt, Telefon, E-Mail und Adresse werden übernommen.</p>
+        <input class="file-input" id="jsonInput" type="file" accept="application/json,.json">
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn ghost" id="setupTestCustomerBtn" type="button">Testkunde generieren</button>
+        </div>
+        <div class="notice section" id="importStatus">Noch kein Lead geladen.</div>
+      </div>
+
+      <div class="card indigo">
+        <h2 class="section-title">Lead-Stammdaten</h2>
+        <div class="meta-list" id="leadMeta">
+          <div class="meta-item"><span>Lead-ID</span><span>–</span></div>
+          <div class="meta-item"><span>Firma</span><span>–</span></div>
+          <div class="meta-item"><span>Kontakt</span><span>–</span></div>
+          <div class="meta-item"><span>Telefon</span><span>–</span></div>
+          <div class="meta-item"><span>Adresse</span><span>–</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section card">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">2. Kurzer Alltagscheck</h2>
+          <p class="copy">Wenige Angaben reichen: Wo bleiben Anfragen liegen, wie schnell wird reagiert und wie klar ist der nächste Schritt?</p>
+        </div>
+      </div>
+
+      <div class="form-row three">
+        <div class="field">
+          <label for="monthlyRequests">Wie viele passende Anfragen kommen ungefähr pro Monat rein?</label>
+          <input id="monthlyRequests" type="number" min="0" step="1" placeholder="z. B. 20">
+          <p class="help-text">Grobe Einschätzung reicht. Es geht um Anfragen, aus denen echte Termine oder Aufträge entstehen könnten.</p>
+        </div>
+        <div class="field">
+          <label for="avgOrderValue">Was ist eine typische Anfrage wert, wenn daraus ein Auftrag wird?</label>
+          <input id="avgOrderValue" type="number" min="0" step="100" placeholder="z. B. 40000">
+          <p class="help-text">Nur als Orientierung. Es geht nicht um eine Finanzprüfung.</p>
+        </div>
+        <div class="field">
+          <label for="notHandledRequests">Wie viele passende Anfragen bleiben pro Monat liegen oder werden zu spät nachgefasst?</label>
+          <input id="notHandledRequests" type="number" min="0" step="1" placeholder="z. B. 6">
+          <p class="help-text">Zum Beispiel: zu spät gesehen, nicht nachgefasst, intern versandet oder ohne klaren nächsten Schritt.</p>
+        </div>
+      </div>
+
+      <div class="form-row three">
+        <div class="field">
+          <label for="reactionTime">Wie schnell meldet sich jemand beim Kunden?</label>
+          <select id="reactionTime">
+            <option value="">Bitte wählen</option>
+              <option value="innerhalb_1_stunde">innerhalb 1 Stunde</option>
+              <option value="gleicher_arbeitstag">gleicher Arbeitstag</option>
+              <option value="1_2_arbeitstage">1–2 Arbeitstage</option>
+              <option value="mehr_als_2_arbeitstage">mehr als 2 Arbeitstage</option>
+              <option value="sehr_unterschiedlich">sehr unterschiedlich</option>
+              <option value="weiss_nicht">weiss nicht</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="mainBottleneck">Wo entsteht im Alltag am meisten Reibung?</label>
+          <select id="mainBottleneck">
+            <option value="">Bitte wählen</option>
+              <option value="anfrage_wird_zu_spaet_gesehen">Anfrage wird zu spät gesehen</option>
+              <option value="zustaendigkeit_unklar">Zuständigkeit unklar</option>
+              <option value="infos_fehlen">Infos fehlen</option>
+              <option value="nachfassen_fehlt">Nachfassen fehlt</option>
+              <option value="zu_viele_kanaele">zu viele Kanäle</option>
+              <option value="kunde_nicht_qualifiziert">Kunde nicht qualifiziert</option>
+              <option value="kein_klares_problem">kein klares Problem</option>
+              <option value="weiss_nicht">weiss nicht</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="success90">Was würde euch im Alltag am meisten entlasten?</label>
+          <select id="success90">
+            <option value="">Bitte wählen</option>
+              <option value="schnellere_rueckmeldung">schnellere Rückmeldung</option>
+              <option value="bessere_uebersicht">bessere Übersicht</option>
+              <option value="weniger_suchzeit">weniger Suchzeit</option>
+              <option value="bessere_anfragen">bessere Anfragen</option>
+              <option value="klareres_nachfassen">klareres Nachfassen</option>
+              <option value="mehr_passende_termine">mehr passende Termine</option>
+              <option value="weniger_stress_im_buero">weniger Stress im Büro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="suggestedNextStep">Was ist nach dem Gespräch der sinnvolle nächste Schritt?</label>
+          <select id="suggestedNextStep">
+            <option value="">Bitte wählen</option>
+              <option value="direkt_projekt">Direkt Projekt prüfen</option>
+              <option value="assessment">Routencheck anbieten</option>
+              <option value="spaeter_nachfassen">Später nachfassen</option>
+              <option value="kein_interesse">Kein Fit</option>
+              <option value="noch_offen">Noch offen</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="impact-grid section">
+        <div class="impact-card pink">
+          <small>Wert der Anfragen, die liegen bleiben</small>
+          <strong id="riskRevenue">CHF 0 / Jahr</strong>
+          <span id="riskRevenueDetail">Noch keine Berechnung.</span>
+        </div>
+        <div class="impact-card gold">
+          <small>Zeit für Nachfassen und Abstimmung</small>
+          <strong id="timeLossMonth">0 Std. / Monat</strong>
+          <span id="timeLossDetail">Konservativer Richtwert für Rückfragen, Nachfassen und interne Abstimmung.</span>
+        </div>
+        <div class="impact-card indigo">
+          <small>Klarheit im nächsten Schritt</small>
+          <strong id="planningLever">Noch offen</strong>
+          <span id="planningReason">Bitte Werte erfassen.</span>
+        </div>
+      </div>
+
+      <div class="notice quiet section">
+        <strong id="fitRecommendation">Noch offen</strong><br>
+        <span id="fitReason">Bitte Werte erfassen. Danach entsteht eine Empfehlung für den nächsten Schritt.</span>
+      </div>
+
+      <div class="field section">
+        <label for="notes">Kurzer Klartext aus dem Gespräch</label>
+        <textarea id="notes" placeholder="z. B. Kunden schneller zurückrufen, Nachfassen klären, Übergabe zwischen Büro und Baustelle vereinfachen"></textarea>
+      </div>
+    </section>
+
+    <section class="section card">
+      <h2 class="section-title">3. Entscheidung nach Fahrplangespräch</h2>
+      <p class="copy">Diese Entscheidung steuert den nächsten Schritt.</p>
+      <div class="decision-grid">
+        <label class="decision-card">
+          <input type="radio" name="decision" value="kein_interesse">
+          <h3>Kein Interesse</h3>
+          <p class="copy">Sauber abschliessen. Nicht jeder Lead muss durch den Prozess.</p>
+        </label>
+        <label class="decision-card">
+          <input type="radio" name="decision" value="assessment">
+          <h3>Routencheck</h3>
+          <p class="copy">E-Mail-Adressen erfassen und gemeinsamen Link versenden.</p>
+        </label>
+        <label class="decision-card">
+          <input type="radio" name="decision" value="direkt_projekt">
+          <h3>Direkt Projekt prüfen</h3>
+          <p class="copy">Wenn Bedarf, Nutzen und Entscheidungswille bereits klar sind.</p>
+        </label>
+      </div>
+    </section>
+
+    <section class="section card hidden" id="assessmentSetup">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">4. Routencheck vorbereiten</h2>
+        </div>
+        <span class="pill">ein Link</span>
+      </div>
+
+      <div class="field">
+        <label for="participantEmails">Teilnehmer-E-Mail-Adressen</label>
+        <textarea id="participantEmails" placeholder="robert@firma.ch&#10;anna@firma.ch&#10;marco@firma.ch"></textarea>
+      </div>
+
+      <details class="advanced-settings">
+        <summary>Routencheck-Link ändern</summary>
+        <div class="field compact-field">
+          <label for="baseUrl">Routencheck-Link</label>
+          <input id="baseUrl" placeholder="https://aiwieevecatchly.github.io/catchly-assessment/assessment.html">
+        </div>
+      </details>
+
+      <input id="mailSubject" type="hidden" value="Catchly Routencheck: kurze Einschätzung zum Erstkontakt">
+      <span id="assessmentLink" class="hidden">Noch nicht gesetzt.</span>
+      <textarea id="mailText" class="hidden" readonly></textarea>
+
+      <div class="btn-row single-action">
+        <button class="btn pink" id="openMailBtn" type="button">Einladung per E-Mail öffnen</button>
+      </div>
+    </section>
+
+    <details class="section card collapsible-card hidden" id="appointmentSetup">
+      <summary class="collapsible-summary">
+        <div>
+          <h2 class="section-title">5. Termin vorbereiten</h2>
+        </div>
+        <span class="pill">aufklappen</span>
+      </summary>
+      <div class="collapsible-body">
+
+      <div class="form-row three equal-fields">
+        <div class="field">
+          <label for="meetingDate">Datum</label>
+          <input id="meetingDate" type="date">
+        </div>
+        <div class="field">
+          <label for="meetingTime">Uhrzeit</label>
+          <input id="meetingTime" type="time" value="09:00">
+        </div>
+        <div class="field">
+          <label for="meetingDuration">Dauer Minuten</label>
+          <input id="meetingDuration" type="number" min="15" step="15" value="45">
+        </div>
+      </div>
+
+      <div class="form-row equal-fields">
+        <div class="field">
+          <label for="meetingTitle">Terminname</label>
+          <input id="meetingTitle" value="Catchly Routencheck Auswertung">
+        </div>
+        <div class="field">
+          <label for="meetingLink">Videolink optional</label>
+          <input id="meetingLink" placeholder="Zoom-/Teams-Link einfügen">
+        </div>
+      </div>
+
+      <textarea id="appointmentText" class="hidden" readonly></textarea>
+
+      <div class="btn-row single-action">
+        <button class="btn pink" id="openAppointmentMailBtn" type="button">Terminmail per E-Mail öffnen</button>
+      </div>
+      </div>
+    </details>
+
+    <details class="section card gold collapsible-card" id="directProjectBox">
+      <summary class="collapsible-summary">
+        <div>
+          <h2 class="section-title">Qualitätslogik</h2>
+        </div>
+        <span class="pill">aufklappen</span>
+      </summary>
+      <div class="collapsible-body">
+        <p class="copy">Wenn die ersten 100 Meter bereits klares Potenzial zeigen, darf die Empfehlung direkt Richtung Projektklärung gehen. Der Routencheck bleibt ein Werkzeug und kein künstlicher Zwischenhalt.</p>
+      </div>
+    </details>
+  </main>
+  <script src="assets/cockpit.js"></script>
+</body>
+</html>

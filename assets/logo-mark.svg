@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Catchly Logo Mark">
+  <rect x="22" y="18" width="56" height="72" rx="4" transform="rotate(13 50 54)" fill="#FFD400"/>
+  <polygon points="42,25 79,51 47,73" fill="#FE007D"/>
+  <circle cx="85" cy="55" r="19" fill="#FE007D"/>
+  <ellipse cx="52" cy="88" rx="12" ry="24" transform="rotate(15 52 88)" fill="#541388"/>
+  <circle cx="37" cy="70" r="7" fill="#541388"/>
+</svg>
