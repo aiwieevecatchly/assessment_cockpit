@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catchly Assessment-Auswertung</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/catchly.css?v=19">
+  <style>
+    /* ── Report-spezifische Styles ─────────────────────── */
+    :root {
+      --report-pink:   #e8306a;
+      --report-indigo: #4f46e5;
+      --report-gold:   #d97706;
+      --report-green:  #059669;
+      --report-gray:   #6b7280;
+      --report-light:  #f9fafb;
+      --report-border: #e5e7eb;
+    }
+    body { background: #f3f4f6; }
+
+    /* Loading / Error */
+    .report-loading, .report-error {
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:center; min-height:60vh; gap:16px; text-align:center;
+    }
+    .spinner {
+      width:40px; height:40px; border:4px solid var(--report-border);
+      border-top-color:var(--report-indigo); border-radius:50%;
+      animation:spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* Cover */
+    .report-cover {
+      background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#4338ca 100%);
+      color:#fff; padding:56px 48px 48px; border-radius:16px;
+      margin-bottom:24px; position:relative; overflow:hidden;
+    }
+    .report-cover::before {
+      content:''; position:absolute; top:-60px; right:-60px;
+      width:300px; height:300px; border-radius:50%;
+      background:rgba(255,255,255,.06);
+    }
+    .report-cover-kicker { font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; opacity:.7; margin-bottom:8px; }
+    .report-cover-title  { font-size:2rem; font-weight:700; line-height:1.2; margin:0 0 8px; }
+    .report-cover-sub    { font-size:1.1rem; opacity:.85; margin:0 0 32px; }
+    .report-cover-meta   { display:flex; gap:32px; flex-wrap:wrap; border-top:1px solid rgba(255,255,255,.2); padding-top:20px; }
+    .report-cover-meta-item small { display:block; font-size:.7rem; opacity:.6; text-transform:uppercase; letter-spacing:.08em; }
+    .report-cover-meta-item strong { font-size:.95rem; }
+    .report-status-badge {
+      display:inline-flex; align-items:center; gap:6px;
+      background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3);
+      padding:6px 14px; border-radius:999px; font-size:.8rem;
+      margin-bottom:20px;
+    }
+    .status-dot { width:8px; height:8px; border-radius:50%; background:#34d399; }
+    .status-dot.pending { background:#fbbf24; }
+
+    /* Sections */
+    .report-section { background:#fff; border-radius:12px; padding:32px; margin-bottom:20px; }
+    .report-section-title {
+      font-size:1.1rem; font-weight:700; color:#111827;
+      border-bottom:2px solid var(--report-border);
+      padding-bottom:12px; margin:0 0 24px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .section-icon { font-size:1.2rem; }
+
+    /* KPI Cards */
+    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:0; }
+    .kpi-card { border-radius:10px; padding:20px 18px; }
+    .kpi-card.pink   { background:#fdf2f8; border:1px solid #fbcfe8; }
+    .kpi-card.indigo { background:#eef2ff; border:1px solid #c7d2fe; }
+    .kpi-card.gold   { background:#fffbeb; border:1px solid #fde68a; }
+    .kpi-card.green  { background:#ecfdf5; border:1px solid #a7f3d0; }
+    .kpi-card small  { font-size:.72rem; color:var(--report-gray); text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:4px; }
+    .kpi-card strong { font-size:1.6rem; font-weight:800; display:block; line-height:1.1; }
+    .kpi-card.pink   strong { color:var(--report-pink); }
+    .kpi-card.indigo strong { color:var(--report-indigo); }
+    .kpi-card.gold   strong { color:var(--report-gold); }
+    .kpi-card.green  strong { color:var(--report-green); }
+    .kpi-card span   { font-size:.78rem; color:var(--report-gray); display:block; margin-top:4px; }
+
+    /* Score Bar */
+    .score-wrap { margin:16px 0; }
+    .score-label { display:flex; justify-content:space-between; font-size:.8rem; color:var(--report-gray); margin-bottom:6px; }
+    .score-track { height:12px; background:var(--report-border); border-radius:999px; overflow:hidden; }
+    .score-fill  { height:100%; border-radius:999px; transition:width .6s ease; }
+    .score-fill.low    { background:#ef4444; }
+    .score-fill.medium { background:#f59e0b; }
+    .score-fill.good   { background:#10b981; }
+    .score-fill.strong { background:var(--report-indigo); }
+
+    /* Answer Tags */
+    .tag-list { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+    .tag {
+      background:var(--report-light); border:1px solid var(--report-border);
+      border-radius:999px; padding:4px 12px; font-size:.78rem; color:#374151;
+    }
+    .tag.highlight { background:#eef2ff; border-color:#c7d2fe; color:var(--report-indigo); font-weight:600; }
+    .tag.warning   { background:#fef3c7; border-color:#fde68a; color:#92400e; }
+    .tag.danger    { background:#fee2e2; border-color:#fecaca; color:#991b1b; }
+
+    /* Answer Row (Q&A format) */
+    .qa-list { display:flex; flex-direction:column; gap:16px; }
+    .qa-item { border-left:3px solid var(--report-border); padding-left:14px; }
+    .qa-item.gf { border-left-color:var(--report-indigo); }
+    .qa-item.ma { border-left-color:var(--report-green); }
+    .qa-question { font-size:.82rem; color:var(--report-gray); margin-bottom:4px; }
+    .qa-answer   { font-size:.92rem; font-weight:600; color:#111827; }
+    .qa-answer .multi { font-weight:400; }
+
+    /* MA Aggregation */
+    .ma-bar-list { display:flex; flex-direction:column; gap:10px; }
+    .ma-bar-item label { font-size:.78rem; color:#374151; display:block; margin-bottom:3px; }
+    .ma-bar-track { height:8px; background:var(--report-border); border-radius:999px; overflow:hidden; }
+    .ma-bar-fill  { height:100%; background:var(--report-indigo); border-radius:999px; }
+    .ma-bar-count { font-size:.72rem; color:var(--report-gray); margin-top:2px; }
+
+    /* Respondents */
+    .respondent-list { display:flex; flex-wrap:wrap; gap:10px; }
+    .respondent-pill {
+      display:flex; align-items:center; gap:8px;
+      background:var(--report-light); border:1px solid var(--report-border);
+      border-radius:999px; padding:6px 14px 6px 8px; font-size:.8rem;
+    }
+    .respondent-avatar {
+      width:24px; height:24px; border-radius:50%;
+      background:var(--report-indigo); color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      font-size:.65rem; font-weight:700; flex-shrink:0;
+    }
+    .respondent-pill.gf .respondent-avatar { background:var(--report-pink); }
+
+    /* Recommendations */
+    .rec-list { display:flex; flex-direction:column; gap:14px; }
+    .rec-item { display:flex; gap:14px; align-items:flex-start; }
+    .rec-num  {
+      width:28px; height:28px; border-radius:50%; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      font-size:.75rem; font-weight:800; color:#fff;
+    }
+    .rec-num.p1 { background:var(--report-pink); }
+    .rec-num.p2 { background:var(--report-gold); }
+    .rec-num.p3 { background:var(--report-indigo); }
+    .rec-num.p4 { background:var(--report-green); }
+    .rec-body h4 { margin:0 0 2px; font-size:.9rem; font-weight:700; color:#111827; }
+    .rec-body p  { margin:0; font-size:.82rem; color:#6b7280; }
+
+    /* Plan */
+    .plan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .plan-col { background:var(--report-light); border-radius:10px; padding:16px; }
+    .plan-col h4 { font-size:.82rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin:0 0 10px; }
+    .plan-col.p30 h4 { color:var(--report-pink); }
+    .plan-col.p60 h4 { color:var(--report-gold); }
+    .plan-col.p90 h4 { color:var(--report-indigo); }
+    .plan-col ul { margin:0; padding-left:16px; }
+    .plan-col li { font-size:.8rem; color:#374151; margin-bottom:4px; }
+
+    /* Print */
+    @media print {
+      body { background:#fff; }
+      .report-cover { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+      .no-print { display:none !important; }
+    }
+    @media (max-width:640px) {
+      .report-cover { padding:32px 20px; }
+      .kpi-grid { grid-template-columns:1fr 1fr; }
+      .plan-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="appRoot" style="max-width:900px;margin:0 auto;padding:24px 16px;">
+
+    <!-- Loading -->
+    <div id="loadingView" class="report-loading">
+      <div class="spinner"></div>
+      <p style="color:#6b7280;font-size:.9rem;">Assessment-Daten werden geladen …</p>
+    </div>
+
+    <!-- Error -->
+    <div id="errorView" class="report-error" style="display:none;">
+      <div style="font-size:2rem;">⚠</div>
+      <h2 style="margin:0;color:#111827;">Daten konnten nicht geladen werden</h2>
+      <p id="errorMsg" style="color:#6b7280;max-width:400px;"></p>
+      <p style="font-size:.8rem;color:#9ca3af;">Prüfe ob die n8n-Workflows aktiv sind und die Assessment-ID in der URL korrekt ist.</p>
+    </div>
+
+    <!-- Report (hidden until data ready) -->
+    <div id="reportView" style="display:none;">
+
+      <!-- Toolbar -->
+      <div class="no-print" style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:16px;">
+        <button onclick="window.print()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:8px 16px;font-size:.82rem;cursor:pointer;display:flex;align-items:center;gap:6px;">🖨 Drucken / PDF</button>
+        <button onclick="window.location.reload()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:8px 16px;font-size:.82rem;cursor:pointer;">↻ Aktualisieren</button>
+      </div>
+
+      <!-- Cover -->
+      <div class="report-cover">
+        <div id="statusBadge" class="report-status-badge">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusText">Wird geladen …</span>
+        </div>
+        <div class="report-cover-kicker">Catchly Assessment-Auswertung</div>
+        <h1 class="report-cover-title" id="coverTitle">–</h1>
+        <p class="report-cover-sub" id="coverSub">Digitalisierungsgrad · Prozessrisiko · Automatisierungspotenzial · Wettbewerb</p>
+        <div class="report-cover-meta">
+          <div class="report-cover-meta-item"><small>Assessment-ID</small><strong id="coverAssessmentId">–</strong></div>
+          <div class="report-cover-meta-item"><small>Antworten</small><strong id="coverResponses">–</strong></div>
+          <div class="report-cover-meta-item"><small>Datum</small><strong id="coverDate">–</strong></div>
+          <div class="report-cover-meta-item"><small>Erstellt durch</small><strong>Catchly</strong></div>
+        </div>
+      </div>
+
+      <!-- 1. Executive Summary -->
+      <div class="report-section">
+        <h2 class="report-section-title"><span class="section-icon">📊</span>Executive Summary</h2>
+        <div class="kpi-grid" id="kpiGrid"><!-- JS --></div>
+        <div style="margin-top:20px;padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;">
+          <strong style="font-size:.82rem;color:#065f46;text-transform:uppercase;letter-spacing:.06em;">Wichtigster Hebel</strong>
+          <p id="mainHebel" style="margin:6px 0 0;font-size:.95rem;color:#111827;font-weight:600;"></p>
+        </div>
+      </div>
+
+      <!-- 2. Digitalisierungs-Score -->
+      <div class="report-section">
+        <h2 class="report-section-title"><span class="section-icon">💡</span>Digitalisierungs- & Automatisierungs-Score</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;" id="scoreGrid"><!-- JS --></div>
+        <div style="margin-top:20px;" id="scoreExplanation"></div>
+      </div>
+
+      <!-- 3. Chancenrisiko -->
+      <div class="report-section">
+        <h2 class="report-section-title"><span class="section-icon">💰</span>Chancenrisiko-Rechnung</h2>
+        <div id="chanceRisikoContent"><!-- JS --></div>
+      </div>
+
+      <!-- 4. Anfrageprozess -->
+      <div class="report-section">
+        <h2 class="report-section-title"><span class="section-icon">🔄</span>Anfrageprozess & Reibungspunkte</h2>
+        <div id="prozessContent"><!-- JS --></div>
+      </div>
+
+      <!-- 5. Value Proposition (GF only) -->
+      <div class="report-section" id="vpSection">
+        <h2 class="report-section-title"><span class="section-icon">🎯</span>Value Proposition & Differenzierung</h2>
+        <div id="vpContent"><!-- JS --></div>
+      </div>
+
+      <!-- 6. Wettbewerb -->
+      <div class="report-section" id="wettbewerbSection">
+        <h2 class="report-section-title"><span class="section-icon">⚔️</span>Wettbewerb & Marktposition</h2>
+        <div id="wettbewerbContent"><!-- JS --></div>
+      </div>
+
+      <!-- 7. Team-Perspektive -->
+      <div class="report-section" id="teamSection">
+        <h2 class="report-section-title"><span class="section-icon">👥</span>Team-Perspektive (aggregiert)</h2>
+        <div id="teamContent"><!-- JS --></div>
+      </div>
+
+      <!-- 8. Handlungsempfehlungen -->
+      <div class="report-section">
+        <h2 class="report-section-title"><span class="section-icon">🚀</span>Prioritisierte Handlungsempfehlungen</h2>
+        <div class="rec-list" id="recList"><!-- JS --></div>
+      </div>
+
+      <!-- 9. 30-60-90 Plan -->
+      <div class="report-section">
+        <h2 class="report-section-title"><span class="section-icon">📅</span>30 – 60 – 90 Tage Fahrplan</h2>
+        <div class="plan-grid" id="planGrid"><!-- JS --></div>
+      </div>
+
+      <!-- Respondents -->
+      <div class="report-section no-print">
+        <h2 class="report-section-title"><span class="section-icon">🙋</span>Teilnehmende</h2>
+        <div class="respondent-list" id="respondentList"><!-- JS --></div>
+      </div>
+
+      <!-- Footer -->
+      <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.75rem;" class="no-print">
+        <p>Catchly Assessment-Auswertung · Orientierungswerte, keine Garantie · <a href="https://catchly.ch" style="color:inherit;">catchly.ch</a></p>
+      </div>
+
+    </div><!-- /reportView -->
+  </div><!-- /appRoot -->
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CATCHLY ASSESSMENT REPORT  –  v1.0
+// ═══════════════════════════════════════════════════════════
+(function () {
+  'use strict';
+
+  const REPORT_ENDPOINT = 'https://workflow.catchly.ch/webhook/get-report';
+
+  // ── Helpers ──────────────────────────────────────────────
+  const $ = id => document.getElementById(id);
+  const chf = n => 'CHF ' + Number(n || 0).toLocaleString('de-CH', { maximumFractionDigits: 0 });
+  const pct = (n, total) => total > 0 ? Math.round(n / total * 100) : 0;
+
+  function el(tag, cls, html) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  // Label maps (value → human label)
+  const LABELS = {
+    reaction_time: {
+      innerhalb_1_stunde: 'innerhalb 1 Stunde', gleicher_arbeitstag: 'gleicher Arbeitstag',
+      '1_2_arbeitstage': '1–2 Arbeitstage', mehr_als_2_arbeitstage: 'mehr als 2 Arbeitstage',
+      sehr_unterschiedlich: 'sehr unterschiedlich', weiss_nicht: 'weiss nicht'
+    },
+    bottleneck: {
+      anfrage_wird_zu_spaet_gesehen: 'Anfrage zu spät gesehen',
+      zustaendigkeit_unklar: 'Zuständigkeit unklar', infos_fehlen: 'Infos fehlen',
+      nachfassen_fehlt: 'Nachfassen fehlt', zu_viele_kanaele: 'zu viele Kanäle',
+      kunde_nicht_qualifiziert: 'Kunde nicht qualifiziert',
+      kein_klares_problem: 'kein klares Problem', weiss_nicht: 'weiss nicht'
+    }
+  };
+
+  // ── Scoring logic ─────────────────────────────────────────
+  function calcDigiScore(gfAnswers) {
+    let score = 0;
+    // GF16: central data source
+    const g16 = gfAnswers['GF16']?.answerValue;
+    if (g16 === 'ja_eine_zentrale_quelle') score += 2;
+    else if (g16 === 'teilweise_zentral') score += 1;
+    else if (g16 === 'viel_in_e_mail_kopf_papier') score -= 1;
+
+    // GF17: tools used
+    const g17 = gfAnswers['GF17']?.selectedValues || [];
+    if (g17.includes('ms_365_sharepoint_onedrive') || g17.includes('crm') || g17.includes('branchensoftware')) score += 2;
+    if (g17.includes('excel')) score += 1;
+    if (g17.includes('papier_notizbuch') || g17.includes('kopf_wissen')) score -= 1;
+
+    // GF15: where is knowledge
+    const g15 = gfAnswers['GF15']?.selectedValues || [];
+    if (g15.includes('crm_branchensoftware') || g15.includes('ms_365_sharepoint_onedrive')) score += 2;
+    if (g15.includes('kopf_wissen_einzelner_personen') || g15.includes('papier_notizen')) score -= 1;
+
+    // GF18: key person risk
+    const g18 = gfAnswers['GF18']?.answerValue;
+    if (g18 === 'nein') score += 2;
+    else if (g18 === 'teilweise') score += 1;
+
+    // Normalize to 1-5
+    const raw = Math.max(-4, Math.min(8, score));
+    return Math.round(((raw + 4) / 12) * 4) + 1; // 1-5
+  }
+
+  function calcAutomationPotential(gfAnswers, maAggregated) {
+    let score = 0;
+    const g06 = gfAnswers['GF06']?.selectedValues || [];
+    if (g06.includes('anfrage_wird_zu_spaet_gesehen')) score += 2;
+    if (g06.includes('nachfassen_fehlt')) score += 2;
+    if (g06.includes('zu_viele_kanaele')) score += 1;
+    if (g06.includes('zustaendigkeit_unklar')) score += 1;
+
+    const g15 = gfAnswers['GF15']?.selectedValues || [];
+    if (g15.includes('kopf_wissen_einzelner_personen')) score += 2;
+    if (g15.includes('mehrere_orte')) score += 1;
+
+    // MA06: double entry
+    if (maAggregated['MA06']) {
+      const topMA06 = getTopAnswer(maAggregated['MA06']);
+      if (topMA06 === 'haeufig' || topMA06 === 'taeglich') score += 2;
+    }
+    return Math.min(5, Math.round(score / 2.5) + 1);
+  }
+
+  function getTopAnswer(questionData) {
+    if (!questionData?.counts) return null;
+    return Object.entries(questionData.counts)
+      .sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+  }
+
+  // ── Render helpers ────────────────────────────────────────
+  function renderScoreBar(label, score, max, colorClass) {
+    const width = pct(score, max);
+    return `<div class="score-wrap">
+      <div class="score-label"><span>${label}</span><span>${score} / ${max}</span></div>
+      <div class="score-track"><div class="score-fill ${colorClass}" style="width:${width}%"></div></div>
+    </div>`;
+  }
+
+  function scoreColor(s, max) {
+    const r = s / max;
+    if (r < 0.4) return 'low';
+    if (r < 0.6) return 'medium';
+    if (r < 0.8) return 'good';
+    return 'strong';
+  }
+
+  function renderTags(values, highlight) {
+    if (!values || !values.length) return '<span style="color:#9ca3af;font-size:.8rem;">– keine Angabe –</span>';
+    return '<div class="tag-list">' +
+      values.map(v => {
+        const isHL = highlight && highlight.includes(v);
+        return `<span class="tag ${isHL ? 'highlight' : ''}">${v}</span>`;
+      }).join('') + '</div>';
+  }
+
+  function renderAnswerBlock(question, data, type) {
+    if (!data) return '';
+    const cls = type === 'gf' ? 'gf' : 'ma';
+    if (data.answerText) {
+      return `<div class="qa-item ${cls}">
+        <div class="qa-question">${question}</div>
+        <div class="qa-answer">${data.answerText || data.answerValue || '–'}</div>
+      </div>`;
+    }
+    if (data.selectedLabels?.length) {
+      return `<div class="qa-item ${cls}">
+        <div class="qa-question">${question}</div>
+        <div class="qa-answer">${data.selectedLabels.join(' · ')}</div>
+      </div>`;
+    }
+    if (data.followUpText) {
+      return `<div class="qa-item ${cls}">
+        <div class="qa-question">${question}</div>
+        <div class="qa-answer">${data.followUpText}</div>
+      </div>`;
+    }
+    return '';
+  }
+
+  function renderMAQuestion(label, qData, totalRespondents) {
+    if (!qData || !qData.counts || Object.keys(qData.counts).length === 0) return '';
+    const sorted = Object.entries(qData.counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    const bars = sorted.map(([val, count]) => {
+      const w = pct(count, totalRespondents);
+      return `<div class="ma-bar-item">
+        <label>${val.replace(/_/g, ' ')}</label>
+        <div class="ma-bar-track"><div class="ma-bar-fill" style="width:${w}%"></div></div>
+        <div class="ma-bar-count">${count} von ${totalRespondents} (${w}%)</div>
+      </div>`;
+    }).join('');
+    return `<div style="margin-bottom:20px;">
+      <div style="font-size:.82rem;font-weight:600;color:#374151;margin-bottom:8px;">${label}</div>
+      <div class="ma-bar-list">${bars}</div>
+    </div>`;
+  }
+
+  // ── Recommendations engine ────────────────────────────────
+  const RECS = {
+    anfrage_wird_zu_spaet_gesehen: {
+      title: 'Zentraler Anfrageeingang einrichten',
+      body: 'Alle Kanäle (Telefon, E-Mail, Web, WhatsApp) an einer Stelle sammeln. Kein Lead bleibt ungesehen.'
+    },
+    nachfassen_fehlt: {
+      title: 'Automatisches Nachfass-System aufbauen',
+      body: '3-Tage-Regel: Wenn kein Feedback vom Kunden, automatische Erinnerung an zuständige Person.'
+    },
+    zustaendigkeit_unklar: {
+      title: 'Klare Zuständigkeits-Regeln definieren',
+      body: 'Jede Anfrage bekommt innerhalb 30 Minuten eine zuständige Person zugewiesen – sichtbar für alle.'
+    },
+    infos_fehlen: {
+      title: 'Strukturiertes Anfrageformular einführen',
+      body: 'Qualifizierungsfragen direkt beim Erstkontakt. Weniger Rückfragen, schnellere Offerte.'
+    },
+    zu_viele_kanaele: {
+      title: 'Kanal-Konsolidierung & Single Source of Truth',
+      body: 'Alle Anfragen laufen in einem zentralen Tool zusammen. Suchzeit und Doppelarbeit fallen weg.'
+    },
+    default: {
+      title: 'Prozess-Audit & Quick Wins identifizieren',
+      body: 'Gemeinsamer Workshop: Reibungspunkte priorisieren und die drei grössten Quick Wins sofort umsetzen.'
+    }
+  };
+
+  function buildRecs(fahrplan, gfAnswers, maAgg) {
+    const recs = [];
+    const bottleneck = fahrplan?.main_bottleneck;
+    if (RECS[bottleneck]) recs.push(RECS[bottleneck]);
+
+    const g06 = gfAnswers['GF06']?.selectedValues || [];
+    g06.forEach(v => { if (RECS[v] && !recs.find(r => r.title === RECS[v].title)) recs.push(RECS[v]); });
+
+    // GF16 – data centrality
+    const g16 = gfAnswers['GF16']?.answerValue || '';
+    if (g16 === 'viel_in_e_mail_kopf_papier' || g16 === 'mehrere_listen_tools') {
+      recs.push({ title: 'Datenzentralisierung: One Source of Truth', body: 'Kundenstatus und Anfragestand für alle sichtbar – in Echtzeit. Suchzeit: weg.' });
+    }
+    // GF20 quick wins
+    const g20 = gfAnswers['GF20']?.selectedValues || [];
+    if (g20.includes('automatische_rueckfrage_mail')) {
+      recs.push({ title: 'Automatische Eingangsbestätigung', body: 'Jede Anfrage bekommt sofort eine Eingangsbestätigung – Kunde weiss, er wurde gesehen.' });
+    }
+    if (recs.length === 0) recs.push(RECS.default);
+    return recs.slice(0, 5);
+  }
+
+  // ── Main render function ──────────────────────────────────
+  function render(data) {
+    const { fahrplan, gf_answers, ma_answers_aggregated, respondents,
+            response_count, invited_count, assessment_id, company } = data;
+
+    const gf = gf_answers || {};
+    const ma = ma_answers_aggregated || {};
+    const allRespondents = respondents || [];
+    const maCount = allRespondents.filter(r => r.role !== 'geschaeftsfuehrung').length;
+    const gfCount  = allRespondents.filter(r => r.role === 'geschaeftsfuehrung').length;
+
+    // Cover
+    $('coverTitle').textContent = company || 'Assessment-Auswertung';
+    $('coverAssessmentId').textContent = assessment_id || '–';
+    $('coverResponses').textContent = `${response_count || 0} von ${invited_count || '?'}`;
+    $('coverDate').textContent = new Date().toLocaleDateString('de-CH', { day:'2-digit', month:'long', year:'numeric' });
+    const allDone = response_count >= invited_count && invited_count > 0;
+    $('statusDot').className = 'status-dot' + (allDone ? '' : ' pending');
+    $('statusText').textContent = allDone ? 'Alle Antworten eingegangen' : `${response_count || 0} von ${invited_count || '?'} Antworten`;
+
+    // Scores
+    const digiScore = calcDigiScore(gf);
+    const autoScore = calcAutomationPotential(gf, ma);
+    const chanceRisk = fahrplan?.chance_risk_year_chf || 0;
+
+    // KPIs
+    const kpiData = [
+      { cls:'pink',   label:'Chancenrisiko / Jahr',       val: chf(chanceRisk),          sub:'verlorenes Umsatzpotenzial' },
+      { cls:'indigo', label:'Digitalisierungs-Score',      val: `${digiScore} / 5`,       sub: ['–','Sehr schwach','Basis vorhanden','Solide','Stark','Best Practice'][digiScore] },
+      { cls:'gold',   label:'Automatisierungs-Potenzial',  val: `${autoScore} / 5`,       sub: ['–','Gering','Vorhanden','Mittel','Hoch','Sehr hoch'][autoScore] },
+      { cls:'green',  label:'Reaktionszeit',               val: LABELS.reaction_time[fahrplan?.reaction_time] || '–', sub:'beim Erstkontakt' }
+    ];
+    $('kpiGrid').innerHTML = kpiData.map(k => `
+      <div class="kpi-card ${k.cls}">
+        <small>${k.label}</small>
+        <strong>${k.val}</strong>
+        <span>${k.sub}</span>
+      </div>`).join('');
+
+    // Main Hebel
+    const topBottleneck = fahrplan?.main_bottleneck || '';
+    $('mainHebel').textContent = (LABELS.bottleneck[topBottleneck] || topBottleneck || 'Noch nicht erfasst') + ' – sofortiger Quick Win möglich.';
+
+    // Score grid
+    $('scoreGrid').innerHTML =
+      renderScoreBar('Digitalisierungs-Score', digiScore, 5, scoreColor(digiScore, 5)) +
+      renderScoreBar('Automatisierungs-Potenzial', autoScore, 5, scoreColor(autoScore, 5));
+    const scoreDescriptions = {
+      1: 'Daten und Abläufe sind auf Papier, in Köpfen und E-Mails verteilt. Hohe Suchzeit, hohes Ausfallrisiko.',
+      2: 'Erste digitale Tools vorhanden, aber keine zentrale Wahrheit. Inseln, Brüche, Doppelarbeit.',
+      3: 'MS365 oder ähnliches genutzt, Prozesse teilweise digital. Klare Ausbaupotenziale.',
+      4: 'Gute digitale Basis. CRM oder zentrale Software aktiv. Automatisierungen möglich.',
+      5: 'Starke digitale Infrastruktur. Prozesse sauber. Fokus auf Optimierung und Skalierung.'
+    };
+    $('scoreExplanation').innerHTML = `<div style="background:#f8fafc;border-radius:8px;padding:14px;font-size:.85rem;color:#374151;">
+      <strong>Befund:</strong> ${scoreDescriptions[digiScore] || ''}
+      ${autoScore >= 4 ? ' <strong>Automatisierungs-Potenzial ist hoch</strong> – konkrete Prozesse können zeitnah automatisiert werden.' : ''}
+    </div>`;
+
+    // Chancenrisiko
+    const monthly = fahrplan?.monthly_requests || 0;
+    const orderVal = fahrplan?.avg_order_value_chf || 0;
+    const notHandled = fahrplan?.not_handled_requests || 0;
+    $('chanceRisikoContent').innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;">
+        <div style="background:#fdf2f8;border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:1.5rem;font-weight:800;color:var(--report-pink);">${monthly}</div>
+          <div style="font-size:.72rem;color:#6b7280;text-transform:uppercase;">Anfragen / Monat</div>
+        </div>
+        <div style="background:#fdf2f8;border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:1.5rem;font-weight:800;color:var(--report-pink);">${notHandled}</div>
+          <div style="font-size:.72rem;color:#6b7280;text-transform:uppercase;">davon liegen bleiben</div>
+        </div>
+        <div style="background:#fdf2f8;border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:1.5rem;font-weight:800;color:var(--report-pink);">${chf(orderVal)}</div>
+          <div style="font-size:.72rem;color:#6b7280;text-transform:uppercase;">Ø Auftragswert</div>
+        </div>
+        <div style="background:#fee2e2;border-radius:8px;padding:14px;text-align:center;border:2px solid #fca5a5;">
+          <div style="font-size:1.5rem;font-weight:800;color:#dc2626;">${chf(chanceRisk)}</div>
+          <div style="font-size:.72rem;color:#6b7280;text-transform:uppercase;">Chancenrisiko / Jahr</div>
+        </div>
+      </div>
+      <p style="font-size:.78rem;color:#9ca3af;margin:0;">Orientierungswert: ${notHandled} Anfragen × ${chf(orderVal)} × 12 Monate. Keine Umsatzgarantie.</p>
+      ${fahrplan?.notes ? `<div style="margin-top:12px;padding:12px;background:#f9fafb;border-radius:8px;font-size:.85rem;color:#374151;border-left:3px solid #d1d5db;"><strong>Notiz aus dem Fahrplangespräch:</strong><br>${fahrplan.notes}</div>` : ''}`;
+
+    // Anfrageprozess
+    const prozessHTML = `
+      <div class="qa-list">
+        ${gf['GF04'] ? renderAnswerBlock('Über welche Kanäle kommen Anfragen rein?', gf['GF04'], 'gf') : ''}
+        ${gf['GF05'] ? renderAnswerBlock('Wie klar ist die Zuständigkeit?', gf['GF05'], 'gf') : ''}
+        ${gf['GF06'] ? renderAnswerBlock('Wo hakt es am häufigsten?', gf['GF06'], 'gf') : ''}
+        ${gf['GF07'] ? renderAnswerBlock('Wie wird nachgefasst?', gf['GF07'], 'gf') : ''}
+      </div>
+      ${maCount > 0 ? `
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--report-border);">
+        <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--report-green);margin-bottom:12px;">Team-Perspektive (${maCount} Mitarbeitende)</div>
+        ${renderMAQuestion('Wie kommen Anfragen an? (MA01)', ma['MA01'], maCount)}
+        ${renderMAQuestion('Klarheit der Zuständigkeit (MA02)', ma['MA02'], maCount)}
+        ${renderMAQuestion('Wie häufig wird gesucht? (MA03)', ma['MA03'], maCount)}
+      </div>` : ''}`;
+    $('prozessContent').innerHTML = prozessHTML;
+
+    // Value Proposition
+    const hasGF = gfCount > 0;
+    if (hasGF) {
+      $('vpContent').innerHTML = `<div class="qa-list">
+        ${renderAnswerBlock('Warum kaufen Kunden heute?', gf['GF08'], 'gf')}
+        ${renderAnswerBlock('Was nervt Kunden vor dem Auftrag?', gf['GF09'], 'gf')}
+        ${renderAnswerBlock('Was macht Sie wirklich anders?', gf['GF10'], 'gf')}
+        ${renderAnswerBlock('Woran erkennt ein Neukunde, dass Sie gut sind?', gf['GF11'], 'gf')}
+        ${renderAnswerBlock('Welche Leistung soll wachsen?', gf['GF01'], 'gf')}
+        ${renderAnswerBlock('Welche Kunden häufiger gewinnen?', gf['GF02'], 'gf')}
+      </div>`;
+    } else {
+      $('vpSection').style.display = 'none';
+    }
+
+    // Wettbewerb
+    if (hasGF && (gf['GF12'] || gf['GF13'] || gf['GF14'])) {
+      $('wettbewerbContent').innerHTML = `<div class="qa-list">
+        ${renderAnswerBlock('Warum verlieren Sie manchmal?', gf['GF12'], 'gf')}
+        ${gf['GF13']?.followUpText || gf['GF13']?.answerValue ? renderAnswerBlock('Welche lokalen Konkurrenten?', gf['GF13'], 'gf') : ''}
+        ${gf['GF14']?.followUpText || gf['GF14']?.answerValue ? renderAnswerBlock('Wer ist digital stark in der Schweiz?', gf['GF14'], 'gf') : ''}
+      </div>`;
+    } else {
+      $('wettbewerbSection').style.display = 'none';
+    }
+
+    // Team-Perspektive (vollständig)
+    if (maCount > 0) {
+      $('teamContent').innerHTML = `
+        <div style="font-size:.82rem;color:#6b7280;margin-bottom:16px;">${maCount} Mitarbeitende aus verschiedenen Bereichen haben geantwortet.</div>
+        ${renderMAQuestion('Wo liegt das Wissen? (MA04/MA05)', ma['MA05'] || ma['MA04'], maCount)}
+        ${renderMAQuestion('Wie oft wird doppelt eingetragen? (MA06)', ma['MA06'], maCount)}
+        ${renderMAQuestion('Wie schnell ist der nächste Schritt klar? (MA07)', ma['MA07'], maCount)}
+        ${renderMAQuestion('Was würde am meisten entlasten?', ma['MA15'] || ma['MA14'], maCount)}
+      `;
+    } else {
+      $('teamSection').innerHTML = $('teamSection').innerHTML.replace('<!-- JS -->', '<p style="color:#9ca3af;font-size:.85rem;">Noch keine Team-Antworten eingegangen.</p>');
+    }
+
+    // Respondents
+    $('respondentList').innerHTML = allRespondents.map(r => {
+      const initials = ((r.first_name || '?')[0] + (r.last_name || '')[0]).toUpperCase();
+      const isGF = r.role === 'geschaeftsfuehrung';
+      return `<div class="respondent-pill ${isGF ? 'gf' : ''}">
+        <div class="respondent-avatar">${initials}</div>
+        <span><strong>${r.first_name || ''} ${r.last_name || ''}</strong> · ${r.role_label || r.role || '–'}</span>
+      </div>`;
+    }).join('');
+
+    // Recommendations
+    const recs = buildRecs(fahrplan, gf, ma);
+    const pClasses = ['p1','p2','p3','p4','p5'];
+    $('recList').innerHTML = recs.map((r, i) =>
+      `<div class="rec-item">
+        <div class="rec-num ${pClasses[i]}">${i+1}</div>
+        <div class="rec-body"><h4>${r.title}</h4><p>${r.body}</p></div>
+      </div>`
+    ).join('');
+
+    // 30-60-90 Plan
+    const g20 = gf['GF20']?.selectedValues || [];
+    const planItems = {
+      p30: ['Wichtigsten Engpass identifizieren', 'Quick Win umsetzen (< 1 Woche)', g20.includes('zentraler_anfrageeingang') ? 'Zentralen Anfrageeingang aufsetzen' : 'Prozess-Mapping durchführen'],
+      p60: [g20.includes('automatische_rueckfrage_mail') ? 'Automatische Eingangsbestätigung live' : 'Erste Automation aufsetzen', g20.includes('klare_wiedervorlage') ? 'Wiedervorlage-System einführen' : 'Tool-Konsolidierung starten', 'Team-Training & Adoption sichern'],
+      p90: ['Messbare Ergebnisse auswerten', g20.includes('crm_lead_liste') ? 'CRM / Lead-Liste produktiv' : 'Vollständige Daten-Zentralisierung', 'Nächste Automatisierungsstufe planen']
+    };
+    $('planGrid').innerHTML = `
+      <div class="plan-col p30"><h4>30 Tage</h4><ul>${planItems.p30.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+      <div class="plan-col p60"><h4>60 Tage</h4><ul>${planItems.p60.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+      <div class="plan-col p90"><h4>90 Tage</h4><ul>${planItems.p90.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+  }
+
+  // ── Fetch & init ──────────────────────────────────────────
+  async function init() {
+    const params = new URLSearchParams(window.location.search);
+    const assessmentId = params.get('assessment_id');
+
+    if (!assessmentId) {
+      $('loadingView').style.display = 'none';
+      $('errorView').style.display = 'flex';
+      $('errorMsg').textContent = 'Keine Assessment-ID in der URL gefunden. Bitte den Link aus dem Fahrplan-Cockpit verwenden.';
+      return;
+    }
+
+    try {
+      const url = `${REPORT_ENDPOINT}?assessment_id=${encodeURIComponent(assessmentId)}`;
+      const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const raw = await resp.json();
+      // n8n wraps response in array sometimes
+      const data = Array.isArray(raw) ? raw[0] : raw;
+      if (!data || data.error) throw new Error(data?.error || 'Leere Antwort vom Server');
+
+      $('loadingView').style.display = 'none';
+      $('reportView').style.display = 'block';
+      render(data);
+
+    } catch (err) {
+      $('loadingView').style.display = 'none';
+      $('errorView').style.display = 'flex';
+      $('errorMsg').textContent = `Fehler: ${err.message}`;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>
