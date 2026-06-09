@@ -3,703 +3,959 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Catchly Assessment-Auswertung</title>
+  <title>Catchly – Ihr Digitalisierungs-Check</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/catchly.css?v=19">
   <style>
-    /* ── Report-spezifische Styles ─────────────────────── */
     :root {
-      --report-pink:   #e8306a;
-      --report-indigo: #4f46e5;
-      --report-gold:   #d97706;
-      --report-green:  #059669;
-      --report-gray:   #6b7280;
-      --report-light:  #f9fafb;
-      --report-border: #e5e7eb;
+      --rp:  #e8306a;
+      --ri:  #4f46e5;
+      --rg:  #059669;
+      --ry:  #d97706;
+      --rb:  #2563eb;
+      --rdk: #111827;
+      --rmd: #6b7280;
+      --rlt: #f9fafb;
+      --rbr: #e5e7eb;
     }
-    body { background: #f3f4f6; }
+    body { background:#f0f2f5; }
 
     /* Loading / Error */
-    .report-loading, .report-error {
-      display:flex; flex-direction:column; align-items:center;
-      justify-content:center; min-height:60vh; gap:16px; text-align:center;
-    }
-    .spinner {
-      width:40px; height:40px; border:4px solid var(--report-border);
-      border-top-color:var(--report-indigo); border-radius:50%;
-      animation:spin .8s linear infinite;
-    }
-    @keyframes spin { to { transform:rotate(360deg); } }
+    .report-loading,.report-error{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px;text-align:center;}
+    .spinner{width:40px;height:40px;border:4px solid var(--rbr);border-top-color:var(--ri);border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
 
-    /* Cover */
-    .report-cover {
-      background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#4338ca 100%);
-      color:#fff; padding:56px 48px 48px; border-radius:16px;
-      margin-bottom:24px; position:relative; overflow:hidden;
+    /* ── Cover ────────────────────────────────────────── */
+    .cover {
+      background:linear-gradient(135deg,#0f0c29 0%,#1e1b4b 40%,#312e81 70%,#4338ca 100%);
+      color:#fff; border-radius:16px; padding:52px 48px 44px;
+      margin-bottom:18px; position:relative; overflow:hidden;
     }
-    .report-cover::before {
-      content:''; position:absolute; top:-60px; right:-60px;
-      width:300px; height:300px; border-radius:50%;
-      background:rgba(255,255,255,.06);
+    .cover::before {
+      content:''; position:absolute; top:-80px; right:-80px;
+      width:360px; height:360px; border-radius:50%;
+      background:rgba(255,255,255,.04); pointer-events:none;
     }
-    .report-cover-kicker { font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; opacity:.7; margin-bottom:8px; }
-    .report-cover-title  { font-size:2rem; font-weight:700; line-height:1.2; margin:0 0 8px; }
-    .report-cover-sub    { font-size:1.1rem; opacity:.85; margin:0 0 32px; }
-    .report-cover-meta   { display:flex; gap:32px; flex-wrap:wrap; border-top:1px solid rgba(255,255,255,.2); padding-top:20px; }
-    .report-cover-meta-item small { display:block; font-size:.7rem; opacity:.6; text-transform:uppercase; letter-spacing:.08em; }
-    .report-cover-meta-item strong { font-size:.95rem; }
-    .report-status-badge {
+    .cover::after {
+      content:''; position:absolute; bottom:-60px; left:-40px;
+      width:240px; height:240px; border-radius:50%;
+      background:rgba(232,48,106,.1); pointer-events:none;
+    }
+    .cover-eyebrow { font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; opacity:.55; margin-bottom:10px; }
+    .cover-company { font-size:2.3rem; font-weight:800; line-height:1.15; margin:0 0 6px; }
+    .cover-tagline { font-size:.9rem; opacity:.7; margin:0 0 32px; }
+
+    .cover-alert {
+      background:rgba(220,38,38,.2); border:1px solid rgba(252,165,165,.4);
+      border-radius:12px; padding:20px 24px; margin-bottom:28px;
+      position:relative; z-index:1;
+    }
+    .cover-alert-label { font-size:.65rem; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
+    .cover-alert-number { font-size:3rem; font-weight:900; color:#fca5a5; line-height:1; }
+    .cover-alert-sub { font-size:.8rem; color:rgba(255,255,255,.65); margin-top:5px; }
+
+    .cover-meta { display:flex; gap:28px; flex-wrap:wrap; border-top:1px solid rgba(255,255,255,.14); padding-top:18px; position:relative; z-index:1; }
+    .cover-meta-item small { display:block; font-size:.62rem; opacity:.5; text-transform:uppercase; letter-spacing:.1em; }
+    .cover-meta-item strong { font-size:.86rem; }
+
+    .status-chip {
       display:inline-flex; align-items:center; gap:6px;
-      background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3);
-      padding:6px 14px; border-radius:999px; font-size:.8rem;
-      margin-bottom:20px;
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.22);
+      padding:5px 12px; border-radius:999px; font-size:.73rem;
+      margin-bottom:20px; position:relative; z-index:1;
     }
-    .status-dot { width:8px; height:8px; border-radius:50%; background:#34d399; }
-    .status-dot.pending { background:#fbbf24; }
+    .dot { width:7px; height:7px; border-radius:50%; background:#34d399; flex-shrink:0; }
+    .dot.amber { background:#fbbf24; }
 
-    /* Sections */
-    .report-section { background:#fff; border-radius:12px; padding:32px; margin-bottom:20px; }
-    .report-section-title {
-      font-size:1.1rem; font-weight:700; color:#111827;
-      border-bottom:2px solid var(--report-border);
-      padding-bottom:12px; margin:0 0 24px;
+    /* ── Wake-Up Banner ───────────────────────────────── */
+    .wakeup {
+      background:linear-gradient(135deg,#7f1d1d,#991b1b,#b91c1c);
+      color:#fff; border-radius:12px; padding:28px 32px; margin-bottom:18px;
+    }
+    .wakeup-title { font-size:1.25rem; font-weight:800; margin:0 0 8px; }
+    .wakeup-body  { font-size:.87rem; opacity:.85; margin:0; line-height:1.65; }
+    .wakeup-numbers { display:flex; gap:14px; flex-wrap:wrap; margin-top:18px; }
+    .wakeup-num {
+      background:rgba(255,255,255,.12); border-radius:8px; padding:12px 16px;
+      min-width:130px;
+    }
+    .wakeup-num big   { display:block; font-size:1.75rem; font-weight:900; line-height:1; }
+    .wakeup-num small { display:block; font-size:.66rem; opacity:.7; text-transform:uppercase; letter-spacing:.06em; margin-top:3px; }
+
+    /* ── Card ─────────────────────────────────────────── */
+    .card { background:#fff; border-radius:12px; padding:32px; margin-bottom:18px; }
+    .card-title {
+      font-size:1.05rem; font-weight:700; color:var(--rdk);
+      border-bottom:2px solid var(--rbr);
+      padding-bottom:12px; margin:0 0 22px;
       display:flex; align-items:center; gap:10px;
     }
-    .section-icon { font-size:1.2rem; }
 
-    /* KPI Cards */
-    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:0; }
-    .kpi-card { border-radius:10px; padding:20px 18px; }
-    .kpi-card.pink   { background:#fdf2f8; border:1px solid #fbcfe8; }
-    .kpi-card.indigo { background:#eef2ff; border:1px solid #c7d2fe; }
-    .kpi-card.gold   { background:#fffbeb; border:1px solid #fde68a; }
-    .kpi-card.green  { background:#ecfdf5; border:1px solid #a7f3d0; }
-    .kpi-card small  { font-size:.72rem; color:var(--report-gray); text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:4px; }
-    .kpi-card strong { font-size:1.6rem; font-weight:800; display:block; line-height:1.1; }
-    .kpi-card.pink   strong { color:var(--report-pink); }
-    .kpi-card.indigo strong { color:var(--report-indigo); }
-    .kpi-card.gold   strong { color:var(--report-gold); }
-    .kpi-card.green  strong { color:var(--report-green); }
-    .kpi-card span   { font-size:.78rem; color:var(--report-gray); display:block; margin-top:4px; }
+    /* ── KPI Grid ─────────────────────────────────────── */
+    .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:14px; }
+    .kpi { border-radius:10px; padding:18px 16px; }
+    .kpi small  { display:block; font-size:.66rem; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px; }
+    .kpi strong { display:block; font-size:1.5rem; font-weight:800; line-height:1.1; }
+    .kpi span   { display:block; font-size:.73rem; margin-top:3px; }
+    .kpi.danger { background:#fef2f2; border:1px solid #fecaca; }
+    .kpi.danger small  { color:#b91c1c; }
+    .kpi.danger strong { color:#dc2626; }
+    .kpi.danger span   { color:#ef4444; }
+    .kpi.warn   { background:#fffbeb; border:1px solid #fde68a; }
+    .kpi.warn   small  { color:#92400e; }
+    .kpi.warn   strong { color:var(--ry); }
+    .kpi.warn   span   { color:#b45309; }
+    .kpi.ok     { background:#f0fdf4; border:1px solid #bbf7d0; }
+    .kpi.ok     small  { color:#065f46; }
+    .kpi.ok     strong { color:var(--rg); }
+    .kpi.ok     span   { color:#059669; }
+    .kpi.info   { background:#eff6ff; border:1px solid #bfdbfe; }
+    .kpi.info   small  { color:#1e40af; }
+    .kpi.info   strong { color:var(--rb); }
+    .kpi.info   span   { color:#2563eb; }
 
-    /* Score Bar */
-    .score-wrap { margin:16px 0; }
-    .score-label { display:flex; justify-content:space-between; font-size:.8rem; color:var(--report-gray); margin-bottom:6px; }
-    .score-track { height:12px; background:var(--report-border); border-radius:999px; overflow:hidden; }
-    .score-fill  { height:100%; border-radius:999px; transition:width .6s ease; }
-    .score-fill.low    { background:#ef4444; }
-    .score-fill.medium { background:#f59e0b; }
-    .score-fill.good   { background:#10b981; }
-    .score-fill.strong { background:var(--report-indigo); }
-
-    /* Answer Tags */
-    .tag-list { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
-    .tag {
-      background:var(--report-light); border:1px solid var(--report-border);
-      border-radius:999px; padding:4px 12px; font-size:.78rem; color:#374151;
+    /* ── EBIT Box ─────────────────────────────────────── */
+    .ebit-box {
+      background:linear-gradient(135deg,#1e1b4b,#312e81);
+      color:#fff; border-radius:10px; padding:24px 28px; margin:16px 0;
     }
-    .tag.highlight { background:#eef2ff; border-color:#c7d2fe; color:var(--report-indigo); font-weight:600; }
-    .tag.warning   { background:#fef3c7; border-color:#fde68a; color:#92400e; }
-    .tag.danger    { background:#fee2e2; border-color:#fecaca; color:#991b1b; }
+    .ebit-box-label  { font-size:.65rem; letter-spacing:.14em; text-transform:uppercase; opacity:.55; margin-bottom:4px; }
+    .ebit-box-number { font-size:2.6rem; font-weight:900; line-height:1; }
+    .ebit-box-sub    { font-size:.8rem; opacity:.72; margin-top:6px; }
+    .ebit-calc { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    .ebit-calc-item  { background:rgba(255,255,255,.1); border-radius:6px; padding:8px 14px; font-size:.76rem; }
+    .ebit-calc-item strong { display:block; font-size:1.1rem; font-weight:800; }
 
-    /* Answer Row (Q&A format) */
-    .qa-list { display:flex; flex-direction:column; gap:16px; }
-    .qa-item { border-left:3px solid var(--report-border); padding-left:14px; }
-    .qa-item.gf { border-left-color:var(--report-indigo); }
-    .qa-item.ma { border-left-color:var(--report-green); }
-    .qa-question { font-size:.82rem; color:var(--report-gray); margin-bottom:4px; }
-    .qa-answer   { font-size:.92rem; font-weight:600; color:#111827; }
-    .qa-answer .multi { font-weight:400; }
+    /* ── Score Bar ────────────────────────────────────── */
+    .score-row { margin:12px 0; }
+    .score-top { display:flex; justify-content:space-between; font-size:.78rem; color:var(--rmd); margin-bottom:5px; }
+    .score-track { height:14px; background:var(--rbr); border-radius:999px; overflow:hidden; }
+    .score-fill  { height:100%; border-radius:999px; transition:width .7s ease; }
+    .score-fill.low    { background:linear-gradient(90deg,#ef4444,#f87171); }
+    .score-fill.medium { background:linear-gradient(90deg,#f59e0b,#fbbf24); }
+    .score-fill.good   { background:linear-gradient(90deg,#10b981,#34d399); }
+    .score-fill.strong { background:linear-gradient(90deg,#4f46e5,#818cf8); }
 
-    /* MA Aggregation */
-    .ma-bar-list { display:flex; flex-direction:column; gap:10px; }
-    .ma-bar-item label { font-size:.78rem; color:#374151; display:block; margin-bottom:3px; }
-    .ma-bar-track { height:8px; background:var(--report-border); border-radius:999px; overflow:hidden; }
-    .ma-bar-fill  { height:100%; background:var(--report-indigo); border-radius:999px; }
-    .ma-bar-count { font-size:.72rem; color:var(--report-gray); margin-top:2px; }
+    /* ── Process Flow ─────────────────────────────────── */
+    .process-flow { display:flex; flex-direction:column; gap:10px; margin:14px 0; }
+    .process-step { display:flex; gap:14px; align-items:flex-start; }
+    .process-icon {
+      width:36px; height:36px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1rem; flex-shrink:0;
+    }
+    .process-icon.red   { background:#fee2e2; }
+    .process-icon.amber { background:#fef3c7; }
+    .process-icon.green { background:#d1fae5; }
+    .process-body strong { display:block; font-size:.88rem; font-weight:700; color:var(--rdk); }
+    .process-body p      { margin:2px 0 0; font-size:.8rem; color:var(--rmd); line-height:1.45; }
 
-    /* Respondents */
+    /* ── MA Bars ──────────────────────────────────────── */
+    .ma-q { margin-bottom:20px; }
+    .ma-q-label { font-size:.8rem; font-weight:600; color:#374151; margin-bottom:8px; }
+    .ma-bar { margin-bottom:7px; }
+    .ma-bar-top { display:flex; justify-content:space-between; font-size:.74rem; color:var(--rmd); margin-bottom:3px; }
+    .ma-bar-track { height:7px; background:var(--rbr); border-radius:999px; overflow:hidden; }
+    .ma-bar-fill  { height:100%; background:var(--ri); border-radius:999px; }
+
+    /* ── QA List ──────────────────────────────────────── */
+    .qa-list { display:flex; flex-direction:column; gap:14px; }
+    .qa-item { border-left:3px solid var(--rbr); padding-left:14px; }
+    .qa-item.gf { border-left-color:var(--ri); }
+    .qa-item.ma { border-left-color:var(--rg); }
+    .qa-q { font-size:.75rem; color:var(--rmd); margin-bottom:3px; }
+    .qa-a { font-size:.88rem; font-weight:600; color:var(--rdk); }
+
+    /* ── Recommendations ──────────────────────────────── */
+    .rec-list { display:flex; flex-direction:column; gap:14px; }
+    .rec { display:flex; gap:14px; align-items:flex-start; }
+    .rec-badge {
+      min-width:32px; height:32px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:.75rem; font-weight:800; color:#fff; flex-shrink:0;
+    }
+    .rec-badge.p1 { background:var(--rp); }
+    .rec-badge.p2 { background:var(--ry); }
+    .rec-badge.p3 { background:var(--ri); }
+    .rec-badge.p4 { background:var(--rg); }
+    .rec-text h4 { margin:0 0 3px; font-size:.9rem; font-weight:700; color:var(--rdk); }
+    .rec-text p  { margin:0; font-size:.8rem; color:var(--rmd); line-height:1.55; }
+
+    /* ── 30-60-90 Plan ────────────────────────────────── */
+    .plan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .plan-col  { border-radius:10px; padding:18px; border:2px solid transparent; }
+    .plan-col h4 { font-size:.74rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; margin:0 0 10px; }
+    .plan-col ul { margin:0; padding-left:16px; }
+    .plan-col li { font-size:.78rem; color:#374151; margin-bottom:5px; line-height:1.45; }
+    .plan-col.p30 { background:#fff0f6; border-color:#fbcfe8; }
+    .plan-col.p30 h4 { color:var(--rp); }
+    .plan-col.p60 { background:#fffbeb; border-color:#fde68a; }
+    .plan-col.p60 h4 { color:var(--ry); }
+    .plan-col.p90 { background:#eef2ff; border-color:#c7d2fe; }
+    .plan-col.p90 h4 { color:var(--ri); }
+
+    /* ── CTA ──────────────────────────────────────────── */
+    .cta-box {
+      background:linear-gradient(135deg,#0f0c29,#1e1b4b);
+      color:#fff; border-radius:12px; padding:36px 32px; text-align:center;
+      margin-bottom:18px;
+    }
+    .cta-box h2 { font-size:1.4rem; font-weight:800; margin:0 0 10px; }
+    .cta-box p  { font-size:.87rem; opacity:.8; margin:0 0 22px; line-height:1.65; max-width:520px; margin-left:auto; margin-right:auto; }
+    .cta-btn {
+      display:inline-block; background:var(--rp); color:#fff;
+      padding:13px 30px; border-radius:8px; font-size:.92rem; font-weight:700;
+      text-decoration:none;
+    }
+
+    /* ── Respondents ──────────────────────────────────── */
     .respondent-list { display:flex; flex-wrap:wrap; gap:10px; }
     .respondent-pill {
       display:flex; align-items:center; gap:8px;
-      background:var(--report-light); border:1px solid var(--report-border);
-      border-radius:999px; padding:6px 14px 6px 8px; font-size:.8rem;
+      background:var(--rlt); border:1px solid var(--rbr);
+      border-radius:999px; padding:6px 14px 6px 8px; font-size:.78rem;
     }
-    .respondent-avatar {
-      width:24px; height:24px; border-radius:50%;
-      background:var(--report-indigo); color:#fff;
+    .r-avatar {
+      width:26px; height:26px; border-radius:50%;
+      background:var(--ri); color:#fff;
       display:flex; align-items:center; justify-content:center;
-      font-size:.65rem; font-weight:700; flex-shrink:0;
+      font-size:.62rem; font-weight:700; flex-shrink:0;
     }
-    .respondent-pill.gf .respondent-avatar { background:var(--report-pink); }
+    .respondent-pill.gf .r-avatar { background:var(--rp); }
 
-    /* Recommendations */
-    .rec-list { display:flex; flex-direction:column; gap:14px; }
-    .rec-item { display:flex; gap:14px; align-items:flex-start; }
-    .rec-num  {
-      width:28px; height:28px; border-radius:50%; flex-shrink:0;
-      display:flex; align-items:center; justify-content:center;
-      font-size:.75rem; font-weight:800; color:#fff;
-    }
-    .rec-num.p1 { background:var(--report-pink); }
-    .rec-num.p2 { background:var(--report-gold); }
-    .rec-num.p3 { background:var(--report-indigo); }
-    .rec-num.p4 { background:var(--report-green); }
-    .rec-body h4 { margin:0 0 2px; font-size:.9rem; font-weight:700; color:#111827; }
-    .rec-body p  { margin:0; font-size:.82rem; color:#6b7280; }
+    /* ── Highlight Box ────────────────────────────────── */
+    .highlight-box { border-radius:8px; padding:14px 16px; margin-top:14px; }
+    .highlight-box.red    { background:#fef2f2; border:1px solid #fecaca; }
+    .highlight-box.amber  { background:#fffbeb; border:1px solid #fde68a; }
+    .highlight-box.green  { background:#f0fdf4; border:1px solid #bbf7d0; }
+    .highlight-box.indigo { background:#eef2ff; border:1px solid #c7d2fe; }
+    .highlight-box-label  { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px; }
+    .highlight-box.red    .highlight-box-label { color:#b91c1c; }
+    .highlight-box.amber  .highlight-box-label { color:#92400e; }
+    .highlight-box.green  .highlight-box-label { color:#065f46; }
+    .highlight-box.indigo .highlight-box-label { color:#3730a3; }
+    .highlight-box-text   { font-size:.88rem; font-weight:600; color:var(--rdk); margin:0; }
 
-    /* Plan */
-    .plan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-    .plan-col { background:var(--report-light); border-radius:10px; padding:16px; }
-    .plan-col h4 { font-size:.82rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin:0 0 10px; }
-    .plan-col.p30 h4 { color:var(--report-pink); }
-    .plan-col.p60 h4 { color:var(--report-gold); }
-    .plan-col.p90 h4 { color:var(--report-indigo); }
-    .plan-col ul { margin:0; padding-left:16px; }
-    .plan-col li { font-size:.8rem; color:#374151; margin-bottom:4px; }
-
-    /* Print */
+    /* ── Print ────────────────────────────────────────── */
     @media print {
       body { background:#fff; }
-      .report-cover { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+      .cover,.wakeup,.ebit-box,.cta-box { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
       .no-print { display:none !important; }
     }
     @media (max-width:640px) {
-      .report-cover { padding:32px 20px; }
+      .cover { padding:28px 20px; }
       .kpi-grid { grid-template-columns:1fr 1fr; }
       .plan-grid { grid-template-columns:1fr; }
+      .wakeup-numbers { flex-direction:column; }
+      .ebit-calc { flex-direction:column; }
     }
   </style>
 </head>
 <body>
-  <div id="appRoot" style="max-width:900px;margin:0 auto;padding:24px 16px;">
+<div id="appRoot" style="max-width:900px;margin:0 auto;padding:24px 16px;">
 
-    <!-- Loading -->
-    <div id="loadingView" class="report-loading">
-      <div class="spinner"></div>
-      <p style="color:#6b7280;font-size:.9rem;">Assessment-Daten werden geladen …</p>
+  <!-- Loading -->
+  <div id="loadingView" class="report-loading">
+    <div class="spinner"></div>
+    <p style="color:#6b7280;font-size:.9rem;">Auswertung wird geladen …</p>
+  </div>
+
+  <!-- Error -->
+  <div id="errorView" class="report-error" style="display:none;">
+    <div style="font-size:2rem;">⚠</div>
+    <h2 style="margin:0;color:#111827;">Daten konnten nicht geladen werden</h2>
+    <p id="errorMsg" style="color:#6b7280;max-width:400px;margin:0;"></p>
+    <p style="font-size:.8rem;color:#9ca3af;margin:0;">Prüfe ob die n8n-Workflows aktiv sind und die Assessment-ID in der URL korrekt ist.</p>
+  </div>
+
+  <!-- Report -->
+  <div id="reportView" style="display:none;">
+
+    <!-- Toolbar -->
+    <div class="no-print" style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:14px;">
+      <button onclick="window.print()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:7px 14px;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:5px;">🖨 PDF / Drucken</button>
+      <button onclick="window.location.reload()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:7px 14px;font-size:.78rem;cursor:pointer;">↻ Aktualisieren</button>
     </div>
 
-    <!-- Error -->
-    <div id="errorView" class="report-error" style="display:none;">
-      <div style="font-size:2rem;">⚠</div>
-      <h2 style="margin:0;color:#111827;">Daten konnten nicht geladen werden</h2>
-      <p id="errorMsg" style="color:#6b7280;max-width:400px;"></p>
-      <p style="font-size:.8rem;color:#9ca3af;">Prüfe ob die n8n-Workflows aktiv sind und die Assessment-ID in der URL korrekt ist.</p>
+    <!-- Cover -->
+    <div class="cover">
+      <div id="statusChip" class="status-chip">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">–</span>
+      </div>
+      <div class="cover-eyebrow">Catchly · Persönlicher Digitalisierungs-Check</div>
+      <h1 class="cover-company" id="coverCompany">–</h1>
+      <p class="cover-tagline">Digitalisierungsgrad · Prozessrisiko · Automatisierungspotenzial · Wettbewerb</p>
+      <div class="cover-alert">
+        <div class="cover-alert-label">Ihr jährliches Chancenrisiko</div>
+        <div class="cover-alert-number" id="coverChanceRisk">CHF –</div>
+        <div class="cover-alert-sub" id="coverChanceRiskSub">Umsatz, der durch Prozesslücken jedes Jahr liegen bleibt</div>
+      </div>
+      <div class="cover-meta">
+        <div class="cover-meta-item"><small>Assessment-ID</small><strong id="coverAssessmentId">–</strong></div>
+        <div class="cover-meta-item"><small>Antworten</small><strong id="coverResponses">–</strong></div>
+        <div class="cover-meta-item"><small>Datum</small><strong id="coverDate">–</strong></div>
+        <div class="cover-meta-item"><small>Erstellt durch</small><strong>Catchly</strong></div>
+      </div>
     </div>
 
-    <!-- Report (hidden until data ready) -->
-    <div id="reportView" style="display:none;">
+    <!-- Wake-Up Call -->
+    <div class="wakeup">
+      <div class="wakeup-title" id="wakeupTitle">–</div>
+      <p class="wakeup-body" id="wakeupBody">–</p>
+      <div class="wakeup-numbers" id="wakeupNumbers"></div>
+    </div>
 
-      <!-- Toolbar -->
-      <div class="no-print" style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:16px;">
-        <button onclick="window.print()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:8px 16px;font-size:.82rem;cursor:pointer;display:flex;align-items:center;gap:6px;">🖨 Drucken / PDF</button>
-        <button onclick="window.location.reload()" style="background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:8px 16px;font-size:.82rem;cursor:pointer;">↻ Aktualisieren</button>
+    <!-- 1. Wo Sie heute stehen -->
+    <div class="card">
+      <h2 class="card-title"><span>📊</span> Wo Sie heute stehen</h2>
+      <div class="kpi-grid" id="kpiGrid"></div>
+      <div class="highlight-box red" id="mainFindingBox" style="margin-top:16px;">
+        <div class="highlight-box-label">Wichtigster Befund</div>
+        <p class="highlight-box-text" id="mainFinding"></p>
       </div>
+    </div>
 
-      <!-- Cover -->
-      <div class="report-cover">
-        <div id="statusBadge" class="report-status-badge">
-          <span class="status-dot" id="statusDot"></span>
-          <span id="statusText">Wird geladen …</span>
-        </div>
-        <div class="report-cover-kicker">Catchly Assessment-Auswertung</div>
-        <h1 class="report-cover-title" id="coverTitle">–</h1>
-        <p class="report-cover-sub" id="coverSub">Digitalisierungsgrad · Prozessrisiko · Automatisierungspotenzial · Wettbewerb</p>
-        <div class="report-cover-meta">
-          <div class="report-cover-meta-item"><small>Assessment-ID</small><strong id="coverAssessmentId">–</strong></div>
-          <div class="report-cover-meta-item"><small>Antworten</small><strong id="coverResponses">–</strong></div>
-          <div class="report-cover-meta-item"><small>Datum</small><strong id="coverDate">–</strong></div>
-          <div class="report-cover-meta-item"><small>Erstellt durch</small><strong>Catchly</strong></div>
-        </div>
-      </div>
+    <!-- 2. Was es Sie kostet -->
+    <div class="card">
+      <h2 class="card-title"><span>💸</span> Was es Sie kostet – heute und in 5 Jahren</h2>
+      <div id="ebitContent"></div>
+    </div>
 
-      <!-- 1. Executive Summary -->
-      <div class="report-section">
-        <h2 class="report-section-title"><span class="section-icon">📊</span>Executive Summary</h2>
-        <div class="kpi-grid" id="kpiGrid"><!-- JS --></div>
-        <div style="margin-top:20px;padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;">
-          <strong style="font-size:.82rem;color:#065f46;text-transform:uppercase;letter-spacing:.06em;">Wichtigster Hebel</strong>
-          <p id="mainHebel" style="margin:6px 0 0;font-size:.95rem;color:#111827;font-weight:600;"></p>
-        </div>
-      </div>
+    <!-- 3. Wo der Schuh drückt -->
+    <div class="card">
+      <h2 class="card-title"><span>🔍</span> Wo der Schuh drückt: Die grössten Reibungspunkte</h2>
+      <div id="prozessContent"></div>
+    </div>
 
-      <!-- 2. Digitalisierungs-Score -->
-      <div class="report-section">
-        <h2 class="report-section-title"><span class="section-icon">💡</span>Digitalisierungs- & Automatisierungs-Score</h2>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;" id="scoreGrid"><!-- JS --></div>
-        <div style="margin-top:20px;" id="scoreExplanation"></div>
-      </div>
+    <!-- 4. Was Ihr Team täglich erlebt -->
+    <div class="card" id="teamCard">
+      <h2 class="card-title"><span>👥</span> Was Ihr Team täglich erlebt</h2>
+      <div id="teamContent"></div>
+    </div>
 
-      <!-- 3. Chancenrisiko -->
-      <div class="report-section">
-        <h2 class="report-section-title"><span class="section-icon">💰</span>Chancenrisiko-Rechnung</h2>
-        <div id="chanceRisikoContent"><!-- JS --></div>
-      </div>
+    <!-- 5. Ihr Digitalisierungsgrad -->
+    <div class="card">
+      <h2 class="card-title"><span>📡</span> Ihr Digitalisierungsgrad – im Klartext</h2>
+      <div id="digiContent"></div>
+    </div>
 
-      <!-- 4. Anfrageprozess -->
-      <div class="report-section">
-        <h2 class="report-section-title"><span class="section-icon">🔄</span>Anfrageprozess & Reibungspunkte</h2>
-        <div id="prozessContent"><!-- JS --></div>
-      </div>
+    <!-- 6. Wettbewerb -->
+    <div class="card" id="wettbewerbCard">
+      <h2 class="card-title"><span>⚔️</span> Wettbewerb: Was auf Sie zukommt</h2>
+      <div id="wettbewerbContent"></div>
+    </div>
 
-      <!-- 5. Value Proposition (GF only) -->
-      <div class="report-section" id="vpSection">
-        <h2 class="report-section-title"><span class="section-icon">🎯</span>Value Proposition & Differenzierung</h2>
-        <div id="vpContent"><!-- JS --></div>
-      </div>
+    <!-- 7. Handlungsempfehlungen -->
+    <div class="card">
+      <h2 class="card-title"><span>🚀</span> Was jetzt zu tun ist – priorisiert</h2>
+      <div class="rec-list" id="recList"></div>
+    </div>
 
-      <!-- 6. Wettbewerb -->
-      <div class="report-section" id="wettbewerbSection">
-        <h2 class="report-section-title"><span class="section-icon">⚔️</span>Wettbewerb & Marktposition</h2>
-        <div id="wettbewerbContent"><!-- JS --></div>
-      </div>
+    <!-- 8. 30-60-90 Tage Fahrplan -->
+    <div class="card">
+      <h2 class="card-title"><span>📅</span> Ihr 30 – 60 – 90 Tage Plan</h2>
+      <div class="plan-grid" id="planGrid"></div>
+    </div>
 
-      <!-- 7. Team-Perspektive -->
-      <div class="report-section" id="teamSection">
-        <h2 class="report-section-title"><span class="section-icon">👥</span>Team-Perspektive (aggregiert)</h2>
-        <div id="teamContent"><!-- JS --></div>
-      </div>
+    <!-- CTA -->
+    <div class="cta-box no-print">
+      <h2>Bereit, das zu ändern?</h2>
+      <p>Catchly zeigt Ihnen genau, wie Sie mit wenig Aufwand die grössten Hebel in Bewegung setzen – in 30 Tagen messbar. Keine langen Projekte. Keine IT-Abteilung nötig.</p>
+      <a href="https://catchly.ch" class="cta-btn">Jetzt Gespräch vereinbaren →</a>
+    </div>
 
-      <!-- 8. Handlungsempfehlungen -->
-      <div class="report-section">
-        <h2 class="report-section-title"><span class="section-icon">🚀</span>Prioritisierte Handlungsempfehlungen</h2>
-        <div class="rec-list" id="recList"><!-- JS --></div>
-      </div>
+    <!-- Teilnehmende -->
+    <div class="card no-print">
+      <h2 class="card-title"><span>🙋</span> Teilnehmende</h2>
+      <div class="respondent-list" id="respondentList"></div>
+    </div>
 
-      <!-- 9. 30-60-90 Plan -->
-      <div class="report-section">
-        <h2 class="report-section-title"><span class="section-icon">📅</span>30 – 60 – 90 Tage Fahrplan</h2>
-        <div class="plan-grid" id="planGrid"><!-- JS --></div>
-      </div>
+    <!-- Footer -->
+    <div style="text-align:center;padding:16px;color:#9ca3af;font-size:.72rem;" class="no-print">
+      Catchly Digitalisierungs-Check · Orientierungswerte, keine Umsatzgarantie ·
+      <a href="https://catchly.ch" style="color:inherit;">catchly.ch</a>
+    </div>
 
-      <!-- Respondents -->
-      <div class="report-section no-print">
-        <h2 class="report-section-title"><span class="section-icon">🙋</span>Teilnehmende</h2>
-        <div class="respondent-list" id="respondentList"><!-- JS --></div>
-      </div>
-
-      <!-- Footer -->
-      <div style="text-align:center;padding:20px;color:#9ca3af;font-size:.75rem;" class="no-print">
-        <p>Catchly Assessment-Auswertung · Orientierungswerte, keine Garantie · <a href="https://catchly.ch" style="color:inherit;">catchly.ch</a></p>
-      </div>
-
-    </div><!-- /reportView -->
-  </div><!-- /appRoot -->
+  </div><!-- /reportView -->
+</div><!-- /appRoot -->
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  CATCHLY ASSESSMENT REPORT  –  v1.0
+//  CATCHLY ASSESSMENT REPORT  –  v2.0
+//  Customer Journey · McKinsey-Style für KMU
 // ═══════════════════════════════════════════════════════════
 (function () {
   'use strict';
 
-  const REPORT_ENDPOINT = 'https://workflow.catchly.ch/webhook/get-report';
+  var ENDPOINT = 'https://workflow.catchly.ch/webhook/get-report';
 
-  // ── Helpers ──────────────────────────────────────────────
-  const $ = id => document.getElementById(id);
-  const chf = n => 'CHF ' + Number(n || 0).toLocaleString('de-CH', { maximumFractionDigits: 0 });
-  const pct = (n, total) => total > 0 ? Math.round(n / total * 100) : 0;
-
-  function el(tag, cls, html) {
-    const e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (html !== undefined) e.innerHTML = html;
-    return e;
-  }
-
-  // Label maps (value → human label)
-  const LABELS = {
-    reaction_time: {
-      innerhalb_1_stunde: 'innerhalb 1 Stunde', gleicher_arbeitstag: 'gleicher Arbeitstag',
-      '1_2_arbeitstage': '1–2 Arbeitstage', mehr_als_2_arbeitstage: 'mehr als 2 Arbeitstage',
-      sehr_unterschiedlich: 'sehr unterschiedlich', weiss_nicht: 'weiss nicht'
-    },
-    bottleneck: {
-      anfrage_wird_zu_spaet_gesehen: 'Anfrage zu spät gesehen',
-      zustaendigkeit_unklar: 'Zuständigkeit unklar', infos_fehlen: 'Infos fehlen',
-      nachfassen_fehlt: 'Nachfassen fehlt', zu_viele_kanaele: 'zu viele Kanäle',
-      kunde_nicht_qualifiziert: 'Kunde nicht qualifiziert',
-      kein_klares_problem: 'kein klares Problem', weiss_nicht: 'weiss nicht'
-    }
+  // ── DOM / Format helpers ─────────────────────────────────
+  var $ = function(id) { return document.getElementById(id); };
+  var esc = function(s) {
+    return String(s || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   };
+  var chf = function(n) {
+    return 'CHF ' + Number(n || 0).toLocaleString('de-CH', { maximumFractionDigits:0 });
+  };
+  var pct = function(n, t) { return t > 0 ? Math.round(n / t * 100) : 0; };
 
-  // ── Scoring logic ─────────────────────────────────────────
-  function calcDigiScore(gfAnswers) {
-    let score = 0;
-    // GF16: central data source
-    const g16 = gfAnswers['GF16']?.answerValue;
-    if (g16 === 'ja_eine_zentrale_quelle') score += 2;
-    else if (g16 === 'teilweise_zentral') score += 1;
-    else if (g16 === 'viel_in_e_mail_kopf_papier') score -= 1;
+  // ── Data store (set once during render) ──────────────────
+  var _gf = {}; // gf answers: flat key→value (string) or key→object
+  var _ma = {}; // ma_aggregated: key→{ answerVal: count }
 
-    // GF17: tools used
-    const g17 = gfAnswers['GF17']?.selectedValues || [];
-    if (g17.includes('ms_365_sharepoint_onedrive') || g17.includes('crm') || g17.includes('branchensoftware')) score += 2;
-    if (g17.includes('excel')) score += 1;
-    if (g17.includes('papier_notizbuch') || g17.includes('kopf_wissen')) score -= 1;
+  // ── Data accessors – resilient to old & new structure ────
 
-    // GF15: where is knowledge
-    const g15 = gfAnswers['GF15']?.selectedValues || [];
-    if (g15.includes('crm_branchensoftware') || g15.includes('ms_365_sharepoint_onedrive')) score += 2;
-    if (g15.includes('kopf_wissen_einzelner_personen') || g15.includes('papier_notizen')) score -= 1;
-
-    // GF18: key person risk
-    const g18 = gfAnswers['GF18']?.answerValue;
-    if (g18 === 'nein') score += 2;
-    else if (g18 === 'teilweise') score += 1;
-
-    // Normalize to 1-5
-    const raw = Math.max(-4, Math.min(8, score));
-    return Math.round(((raw + 4) / 12) * 4) + 1; // 1-5
-  }
-
-  function calcAutomationPotential(gfAnswers, maAggregated) {
-    let score = 0;
-    const g06 = gfAnswers['GF06']?.selectedValues || [];
-    if (g06.includes('anfrage_wird_zu_spaet_gesehen')) score += 2;
-    if (g06.includes('nachfassen_fehlt')) score += 2;
-    if (g06.includes('zu_viele_kanaele')) score += 1;
-    if (g06.includes('zustaendigkeit_unklar')) score += 1;
-
-    const g15 = gfAnswers['GF15']?.selectedValues || [];
-    if (g15.includes('kopf_wissen_einzelner_personen')) score += 2;
-    if (g15.includes('mehrere_orte')) score += 1;
-
-    // MA06: double entry
-    if (maAggregated['MA06']) {
-      const topMA06 = getTopAnswer(maAggregated['MA06']);
-      if (topMA06 === 'haeufig' || topMA06 === 'taeglich') score += 2;
+  // Returns single string value for a GF question
+  function gfVal(key) {
+    var v = _gf[key];
+    if (v === undefined || v === null) return '';
+    if (typeof v === 'string') return v;
+    if (typeof v === 'object') {
+      return v.answerValue || v.answerText || v.followUpText || '';
     }
-    return Math.min(5, Math.round(score / 2.5) + 1);
+    return String(v);
   }
 
-  function getTopAnswer(questionData) {
-    if (!questionData?.counts) return null;
-    return Object.entries(questionData.counts)
-      .sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+  // Returns array of values for multi-select GF questions
+  function gfVals(key) {
+    var v = _gf[key];
+    if (v === undefined || v === null) return [];
+    // Old structure: objects with selectedValues array
+    if (typeof v === 'object' && !Array.isArray(v)) {
+      if (Array.isArray(v.selectedValues)) return v.selectedValues;
+      if (Array.isArray(v.selectedLabels)) return v.selectedLabels;
+      if (v.answerValue) return [v.answerValue];
+      return [];
+    }
+    if (Array.isArray(v)) return v;
+    var s = String(v).trim();
+    if (!s) return [];
+    try {
+      var p = JSON.parse(s);
+      if (Array.isArray(p)) return p;
+    } catch(e) {}
+    return s.split(',').map(function(x) { return x.trim(); }).filter(Boolean);
   }
 
-  // ── Render helpers ────────────────────────────────────────
-  function renderScoreBar(label, score, max, colorClass) {
-    const width = pct(score, max);
-    return `<div class="score-wrap">
-      <div class="score-label"><span>${label}</span><span>${score} / ${max}</span></div>
-      <div class="score-track"><div class="score-fill ${colorClass}" style="width:${width}%"></div></div>
-    </div>`;
+  // Returns { answerVal: count } for an MA question
+  function maCounts(key) {
+    var q = _ma[key];
+    if (!q || typeof q !== 'object') return {};
+    // Support { counts: { val: n } } and flat { val: n }
+    return q.counts || q;
   }
 
-  function scoreColor(s, max) {
-    const r = s / max;
+  // Returns the top answer value for an MA question
+  function maTop(key) {
+    var c = maCounts(key);
+    var entries = Object.entries(c);
+    if (!entries.length) return null;
+    entries.sort(function(a,b) { return b[1]-a[1]; });
+    return entries[0][0];
+  }
+
+  // ── Scoring ──────────────────────────────────────────────
+  function calcDigiScore() {
+    var s = 0;
+    var g16 = gfVal('GF16');
+    if (g16.includes('zentrale_quelle') || g16 === 'ja_eine_zentrale_quelle') s += 2;
+    else if (g16.includes('teilweise')) s += 1;
+    else if (g16.includes('e_mail') || g16.includes('papier') || g16.includes('kopf')) s -= 1;
+
+    var g17 = gfVals('GF17');
+    if (g17.some(function(v){ return v.includes('crm')||v.includes('sharepoint')||v.includes('ms_365')||v.includes('branchensoftware'); })) s += 2;
+    if (g17.some(function(v){ return v.includes('excel'); })) s += 1;
+    if (g17.some(function(v){ return v.includes('papier')||v.includes('kopf'); })) s -= 1;
+
+    var g15 = gfVals('GF15');
+    if (g15.some(function(v){ return v.includes('crm')||v.includes('sharepoint')||v.includes('ms_365'); })) s += 2;
+    if (g15.some(function(v){ return v.includes('kopf')||v.includes('papier'); })) s -= 1;
+
+    var g18 = gfVal('GF18');
+    if (g18 === 'nein' || g18.includes('nein')) s += 2;
+    else if (g18.includes('teilweise')) s += 1;
+
+    var raw = Math.max(-4, Math.min(8, s));
+    return Math.round(((raw + 4) / 12) * 4) + 1; // 1–5
+  }
+
+  function calcAutoPotential() {
+    var s = 0;
+    var g06 = gfVals('GF06');
+    if (g06.some(function(v){ return v.includes('zu_spaet')||v.includes('spaet'); })) s += 2;
+    if (g06.some(function(v){ return v.includes('nachfassen'); })) s += 2;
+    if (g06.some(function(v){ return v.includes('kanaele')||v.includes('kanäle'); })) s += 1;
+    if (g06.some(function(v){ return v.includes('zustaendigkeit')||v.includes('zuständigkeit'); })) s += 1;
+
+    var g15 = gfVals('GF15');
+    if (g15.some(function(v){ return v.includes('kopf'); })) s += 2;
+    if (g15.some(function(v){ return v.includes('mehrere'); })) s += 1;
+
+    var top06 = maTop('MA06');
+    if (top06 && (top06.includes('haeufig')||top06.includes('täglich')||top06.includes('taeglich'))) s += 2;
+
+    return Math.min(5, Math.round(s / 2.5) + 1);
+  }
+
+  function scoreClass(score, max) {
+    var r = score / max;
     if (r < 0.4) return 'low';
     if (r < 0.6) return 'medium';
     if (r < 0.8) return 'good';
     return 'strong';
   }
 
-  function renderTags(values, highlight) {
-    if (!values || !values.length) return '<span style="color:#9ca3af;font-size:.8rem;">– keine Angabe –</span>';
-    return '<div class="tag-list">' +
-      values.map(v => {
-        const isHL = highlight && highlight.includes(v);
-        return `<span class="tag ${isHL ? 'highlight' : ''}">${v}</span>`;
-      }).join('') + '</div>';
+  // ── Render helpers ────────────────────────────────────────
+  function renderScoreRow(label, score, max) {
+    var cls = scoreClass(score, max);
+    var w = pct(score, max);
+    return '<div class="score-row">' +
+      '<div class="score-top"><span>' + esc(label) + '</span><span style="font-weight:700">' + score + ' / ' + max + '</span></div>' +
+      '<div class="score-track"><div class="score-fill ' + cls + '" style="width:' + w + '%"></div></div>' +
+      '</div>';
   }
 
-  function renderAnswerBlock(question, data, type) {
-    if (!data) return '';
-    const cls = type === 'gf' ? 'gf' : 'ma';
-    if (data.answerText) {
-      return `<div class="qa-item ${cls}">
-        <div class="qa-question">${question}</div>
-        <div class="qa-answer">${data.answerText || data.answerValue || '–'}</div>
-      </div>`;
-    }
-    if (data.selectedLabels?.length) {
-      return `<div class="qa-item ${cls}">
-        <div class="qa-question">${question}</div>
-        <div class="qa-answer">${data.selectedLabels.join(' · ')}</div>
-      </div>`;
-    }
-    if (data.followUpText) {
-      return `<div class="qa-item ${cls}">
-        <div class="qa-question">${question}</div>
-        <div class="qa-answer">${data.followUpText}</div>
-      </div>`;
-    }
-    return '';
-  }
-
-  function renderMAQuestion(label, qData, totalRespondents) {
-    if (!qData || !qData.counts || Object.keys(qData.counts).length === 0) return '';
-    const sorted = Object.entries(qData.counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-    const bars = sorted.map(([val, count]) => {
-      const w = pct(count, totalRespondents);
-      return `<div class="ma-bar-item">
-        <label>${val.replace(/_/g, ' ')}</label>
-        <div class="ma-bar-track"><div class="ma-bar-fill" style="width:${w}%"></div></div>
-        <div class="ma-bar-count">${count} von ${totalRespondents} (${w}%)</div>
-      </div>`;
+  function renderMAQ(label, key, total) {
+    var c = maCounts(key);
+    var entries = Object.entries(c).sort(function(a,b){ return b[1]-a[1]; }).slice(0, 4);
+    if (!entries.length) return '';
+    var bars = entries.map(function(e) {
+      var val = e[0]; var count = e[1];
+      var w = pct(count, total);
+      return '<div class="ma-bar">' +
+        '<div class="ma-bar-top"><span>' + esc(val.replace(/_/g,' ')) + '</span><span>' + count + '/' + total + ' (' + w + '%)</span></div>' +
+        '<div class="ma-bar-track"><div class="ma-bar-fill" style="width:' + w + '%"></div></div>' +
+        '</div>';
     }).join('');
-    return `<div style="margin-bottom:20px;">
-      <div style="font-size:.82rem;font-weight:600;color:#374151;margin-bottom:8px;">${label}</div>
-      <div class="ma-bar-list">${bars}</div>
-    </div>`;
+    return '<div class="ma-q"><div class="ma-q-label">' + esc(label) + '</div>' + bars + '</div>';
+  }
+
+  function renderQA(question, key, type) {
+    var val  = gfVal(key);
+    var vals = gfVals(key);
+    var answer = val || vals.join(' · ');
+    if (!answer) return '';
+    return '<div class="qa-item ' + type + '">' +
+      '<div class="qa-q">' + esc(question) + '</div>' +
+      '<div class="qa-a">' + esc(answer) + '</div>' +
+      '</div>';
   }
 
   // ── Recommendations engine ────────────────────────────────
-  const RECS = {
+  var REC_MAP = {
     anfrage_wird_zu_spaet_gesehen: {
-      title: 'Zentraler Anfrageeingang einrichten',
-      body: 'Alle Kanäle (Telefon, E-Mail, Web, WhatsApp) an einer Stelle sammeln. Kein Lead bleibt ungesehen.'
+      title: 'Zentraler Anfrageeingang – kein Lead mehr übersehen',
+      body:  'Telefon, E-Mail, Web, WhatsApp – alles an einem Ort. Automatische Zuweisung in unter 2 Minuten. Kein Lead fällt mehr durchs Raster.'
     },
     nachfassen_fehlt: {
-      title: 'Automatisches Nachfass-System aufbauen',
-      body: '3-Tage-Regel: Wenn kein Feedback vom Kunden, automatische Erinnerung an zuständige Person.'
+      title: 'Automatisches Nachfassen – die 3-Tage-Regel',
+      body:  'Meldet sich ein Interessent nicht innert 3 Tagen, bekommt die zuständige Person eine automatische Erinnerung. Erfahrungswert: Abschlussquote +15–30%.'
     },
     zustaendigkeit_unklar: {
-      title: 'Klare Zuständigkeits-Regeln definieren',
-      body: 'Jede Anfrage bekommt innerhalb 30 Minuten eine zuständige Person zugewiesen – sichtbar für alle.'
+      title: 'Klare Zuständigkeit – jede Anfrage hat eine Person',
+      body:  'Jede neue Anfrage bekommt innerhalb von 30 Minuten eine Verantwortliche. Sichtbar für das ganze Team. Keine Anfrage bleibt in der Luft hängen.'
     },
     infos_fehlen: {
-      title: 'Strukturiertes Anfrageformular einführen',
-      body: 'Qualifizierungsfragen direkt beim Erstkontakt. Weniger Rückfragen, schnellere Offerte.'
+      title: 'Strukturierter Erstkontakt – weniger Rückfragen',
+      body:  'Qualifizierungsfragen direkt beim Erstkontakt. Ihr Team muss nicht mehr nachfragen. Offerten gehen schneller raus, Abschlussrate steigt.'
     },
     zu_viele_kanaele: {
-      title: 'Kanal-Konsolidierung & Single Source of Truth',
-      body: 'Alle Anfragen laufen in einem zentralen Tool zusammen. Suchzeit und Doppelarbeit fallen weg.'
-    },
-    default: {
-      title: 'Prozess-Audit & Quick Wins identifizieren',
-      body: 'Gemeinsamer Workshop: Reibungspunkte priorisieren und die drei grössten Quick Wins sofort umsetzen.'
+      title: 'Kanal-Konsolidierung – eine Wahrheit für alle',
+      body:  'Alle Anfragen laufen in einem zentralen Tool zusammen. Keine doppelte Erfassung mehr. Ihr Team weiss jederzeit, was wo steht.'
     }
   };
 
-  function buildRecs(fahrplan, gfAnswers, maAgg) {
-    const recs = [];
-    const bottleneck = fahrplan?.main_bottleneck;
-    if (RECS[bottleneck]) recs.push(RECS[bottleneck]);
+  var REC_DEFAULT = {
+    title: 'Quick Wins sofort identifizieren',
+    body:  'In einem halbtägigen Workshop mit Catchly: die 3 grössten Reibungspunkte sichtbar machen und die ersten konkreten Massnahmen sofort starten.'
+  };
 
-    const g06 = gfAnswers['GF06']?.selectedValues || [];
-    g06.forEach(v => { if (RECS[v] && !recs.find(r => r.title === RECS[v].title)) recs.push(RECS[v]); });
+  function buildRecs(fahrplan) {
+    var recs = [];
+    var bn = (fahrplan && fahrplan.main_bottleneck) || '';
+    if (REC_MAP[bn]) recs.push(REC_MAP[bn]);
 
-    // GF16 – data centrality
-    const g16 = gfAnswers['GF16']?.answerValue || '';
-    if (g16 === 'viel_in_e_mail_kopf_papier' || g16 === 'mehrere_listen_tools') {
-      recs.push({ title: 'Datenzentralisierung: One Source of Truth', body: 'Kundenstatus und Anfragestand für alle sichtbar – in Echtzeit. Suchzeit: weg.' });
+    var g06 = gfVals('GF06');
+    g06.forEach(function(v) {
+      var match = Object.keys(REC_MAP).find(function(k) {
+        return v.includes(k) || k.split('_').slice(0,2).every(function(w){ return v.includes(w); });
+      });
+      if (match && REC_MAP[match] && !recs.find(function(r){ return r.title === REC_MAP[match].title; })) {
+        recs.push(REC_MAP[match]);
+      }
+    });
+
+    var g16 = gfVal('GF16');
+    if (g16.includes('e_mail')||g16.includes('papier')||g16.includes('kopf')||g16.includes('mehrere')) {
+      var r = {
+        title: 'Datenzentralisierung – eine einzige Wahrheit',
+        body:  'Kundenstatus, Anfragestand, Notizen – für alle sichtbar, in Echtzeit. Suchzeit: null. Versionswirrwarr: null. Fehler durch doppelte Erfassung: null.'
+      };
+      if (!recs.find(function(x){ return x.title === r.title; })) recs.push(r);
     }
-    // GF20 quick wins
-    const g20 = gfAnswers['GF20']?.selectedValues || [];
-    if (g20.includes('automatische_rueckfrage_mail')) {
-      recs.push({ title: 'Automatische Eingangsbestätigung', body: 'Jede Anfrage bekommt sofort eine Eingangsbestätigung – Kunde weiss, er wurde gesehen.' });
+
+    var g20 = gfVals('GF20');
+    if (g20.some(function(v){ return v.includes('rueckfrage')||v.includes('bestaetigung'); })) {
+      var r2 = {
+        title: 'Automatische Eingangsbestätigung',
+        body:  'Jede Anfrage bekommt sofort eine Bestätigung – der Interessent weiss: er wurde gesehen. Vertrauen steigt, Absprünge sinken.'
+      };
+      if (!recs.find(function(x){ return x.title === r2.title; })) recs.push(r2);
     }
-    if (recs.length === 0) recs.push(RECS.default);
-    return recs.slice(0, 5);
+
+    if (recs.length === 0) recs.push(REC_DEFAULT);
+    return recs.slice(0, 4);
   }
 
   // ── Main render function ──────────────────────────────────
   function render(data) {
-    const { fahrplan, gf_answers, ma_answers_aggregated, respondents,
-            response_count, invited_count, assessment_id, company } = data;
+    // Normalise data structure: new Code node returns gf_answers.answers (flat),
+    // old structure returns gf_answers directly as key→object
+    var gfRaw = data.gf_answers || {};
+    _gf = gfRaw.answers || gfRaw;
+    _ma = data.ma_aggregated || data.ma_answers_aggregated || {};
 
-    const gf = gf_answers || {};
-    const ma = ma_answers_aggregated || {};
-    const allRespondents = respondents || [];
-    const maCount = allRespondents.filter(r => r.role !== 'geschaeftsfuehrung').length;
-    const gfCount  = allRespondents.filter(r => r.role === 'geschaeftsfuehrung').length;
+    var fahrplan     = data.fahrplan || {};
+    var respondents  = data.respondents || [];
+    var respCount    = Number(data.response_count || 0);
+    var invCount     = Number(data.invited_count  || 0);
+    var company      = data.company || 'Assessment-Auswertung';
+    var assessmentId = data.assessment_id || '–';
+    var allDone      = data.all_responded || (invCount > 0 && respCount >= invCount);
+    var maCount      = respondents.filter(function(r){ return r.role!=='gf'&&r.role!=='geschaeftsfuehrung'; }).length;
+    var hasGF        = respondents.some(function(r){ return r.role==='gf'||r.role==='geschaeftsfuehrung'; });
 
-    // Cover
-    $('coverTitle').textContent = company || 'Assessment-Auswertung';
-    $('coverAssessmentId').textContent = assessment_id || '–';
-    $('coverResponses').textContent = `${response_count || 0} von ${invited_count || '?'}`;
-    $('coverDate').textContent = new Date().toLocaleDateString('de-CH', { day:'2-digit', month:'long', year:'numeric' });
-    const allDone = response_count >= invited_count && invited_count > 0;
-    $('statusDot').className = 'status-dot' + (allDone ? '' : ' pending');
-    $('statusText').textContent = allDone ? 'Alle Antworten eingegangen' : `${response_count || 0} von ${invited_count || '?'} Antworten`;
+    // Numbers
+    var monthly    = Number(fahrplan.monthly_requests     || 0);
+    var orderVal   = Number(fahrplan.avg_order_value_chf  || 0);
+    var notHandled = Number(fahrplan.not_handled_requests || 0);
+    var chanceRisk = Number(fahrplan.chance_risk_year_chf || (notHandled * orderVal * 12));
+    var ebitRisk   = Math.round(chanceRisk * 0.15); // 15% EBIT-Marge
+    var hiddenCost = Math.round(chanceRisk * 0.20); // 20% versteckte Ineffizienzkosten
 
-    // Scores
-    const digiScore = calcDigiScore(gf);
-    const autoScore = calcAutomationPotential(gf, ma);
-    const chanceRisk = fahrplan?.chance_risk_year_chf || 0;
+    var digiScore = calcDigiScore();
+    var autoScore = calcAutoPotential();
 
-    // KPIs
-    const kpiData = [
-      { cls:'pink',   label:'Chancenrisiko / Jahr',       val: chf(chanceRisk),          sub:'verlorenes Umsatzpotenzial' },
-      { cls:'indigo', label:'Digitalisierungs-Score',      val: `${digiScore} / 5`,       sub: ['–','Sehr schwach','Basis vorhanden','Solide','Stark','Best Practice'][digiScore] },
-      { cls:'gold',   label:'Automatisierungs-Potenzial',  val: `${autoScore} / 5`,       sub: ['–','Gering','Vorhanden','Mittel','Hoch','Sehr hoch'][autoScore] },
-      { cls:'green',  label:'Reaktionszeit',               val: LABELS.reaction_time[fahrplan?.reaction_time] || '–', sub:'beim Erstkontakt' }
+    // ── Cover ────────────────────────────────────────────────
+    $('coverCompany').textContent    = company;
+    $('coverAssessmentId').textContent = assessmentId;
+    $('coverResponses').textContent  = respCount + ' von ' + (invCount || '?');
+    $('coverDate').textContent       = new Date().toLocaleDateString('de-CH', { day:'2-digit', month:'long', year:'numeric' });
+    $('coverChanceRisk').textContent = chf(chanceRisk);
+    $('coverChanceRiskSub').textContent = notHandled > 0
+      ? notHandled + ' Anfragen × ' + chf(orderVal) + ' × 12 Monate = verlorener Jahresumsatz'
+      : 'Basierend auf Ihren Angaben aus dem Fahrplangespräch';
+    $('statusDot').className  = 'dot' + (allDone ? '' : ' amber');
+    $('statusText').textContent = allDone ? '✓ Alle Antworten eingegangen' : respCount + ' von ' + invCount + ' Antworten';
+
+    // ── Wake-Up Call ─────────────────────────────────────────
+    var wakeupDefs = [
+      {
+        minScore:0, maxScore:2,
+        title: '⚠️ Ihr Betrieb ist digital verletzbar',
+        body: 'Studien zeigen: 40% der KMU, die heute noch auf Papier, E-Mail und mündliche Absprachen setzen, werden in 5 Jahren nicht mehr wettbewerbsfähig sein. Ihr Digitalisierungsgrad liegt im untersten Bereich. Konkret bedeutet das: Ihre Mitbewerber reagieren heute schon schneller, machen weniger Fehler – und übernehmen Ihre Kunden, ohne dass Sie es merken.'
+      },
+      {
+        minScore:3, maxScore:3,
+        title: '⚠️ Ihre Prozesse kosten Sie täglich Geld',
+        body: 'Sie haben erste digitale Ansätze – aber die Daten sind noch verteilt, das Nachfassen passiert per Zufall, und Ihr Team verliert täglich Zeit mit Suchen und Doppelarbeit. Das merkt der Kunde. Und Ihre Mitbewerber auch. Die gute Nachricht: Gezielte Quick Wins können das in 30 Tagen messbar verändern.'
+      },
+      {
+        minScore:4, maxScore:5,
+        title: '💡 Solide Basis – das Potenzial ist aber noch grösser',
+        body: 'Sie haben eine gute digitale Grundlage. Der nächste Schritt sind Automatisierungen, die Ihrem Team täglich Arbeit abnehmen und Ihnen mehr Zeit für das Wesentliche lassen. Die Low-Hanging-Fruits liegen bereits auf der Hand.'
+      }
     ];
-    $('kpiGrid').innerHTML = kpiData.map(k => `
-      <div class="kpi-card ${k.cls}">
-        <small>${k.label}</small>
-        <strong>${k.val}</strong>
-        <span>${k.sub}</span>
-      </div>`).join('');
-
-    // Main Hebel
-    const topBottleneck = fahrplan?.main_bottleneck || '';
-    $('mainHebel').textContent = (LABELS.bottleneck[topBottleneck] || topBottleneck || 'Noch nicht erfasst') + ' – sofortiger Quick Win möglich.';
-
-    // Score grid
-    $('scoreGrid').innerHTML =
-      renderScoreBar('Digitalisierungs-Score', digiScore, 5, scoreColor(digiScore, 5)) +
-      renderScoreBar('Automatisierungs-Potenzial', autoScore, 5, scoreColor(autoScore, 5));
-    const scoreDescriptions = {
-      1: 'Daten und Abläufe sind auf Papier, in Köpfen und E-Mails verteilt. Hohe Suchzeit, hohes Ausfallrisiko.',
-      2: 'Erste digitale Tools vorhanden, aber keine zentrale Wahrheit. Inseln, Brüche, Doppelarbeit.',
-      3: 'MS365 oder ähnliches genutzt, Prozesse teilweise digital. Klare Ausbaupotenziale.',
-      4: 'Gute digitale Basis. CRM oder zentrale Software aktiv. Automatisierungen möglich.',
-      5: 'Starke digitale Infrastruktur. Prozesse sauber. Fokus auf Optimierung und Skalierung.'
-    };
-    $('scoreExplanation').innerHTML = `<div style="background:#f8fafc;border-radius:8px;padding:14px;font-size:.85rem;color:#374151;">
-      <strong>Befund:</strong> ${scoreDescriptions[digiScore] || ''}
-      ${autoScore >= 4 ? ' <strong>Automatisierungs-Potenzial ist hoch</strong> – konkrete Prozesse können zeitnah automatisiert werden.' : ''}
-    </div>`;
-
-    // Chancenrisiko
-    const monthly = fahrplan?.monthly_requests || 0;
-    const orderVal = fahrplan?.avg_order_value_chf || 0;
-    const notHandled = fahrplan?.not_handled_requests || 0;
-    $('chanceRisikoContent').innerHTML = `
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;">
-        <div style="background:#fdf2f8;border-radius:8px;padding:14px;text-align:center;">
-          <div style="font-size:1.5rem;font-weight:800;color:var(--report-pink);">${monthly}</div>
-          <div style="font-size:.72rem;color:#6b7280;text-transform:uppercase;">Anfragen / Monat</div>
-        </div>
-        <div style="background:#fdf2f8;border-radius:8px;padding:14px;text-align:center;">
-          <div style="font-size:1.5rem;font-weight:800;color:var(--report-pink);">${notHandled}</div>
-          <div style="font-size:.72rem;color:#6b7280;text-transform:uppercase;">davon liegen bleiben</div>
-        </div>
-        <div style="background:#fdf2f8;border-radius:8px;padding:14px;text-align:center;">
-          <div style="font-size:1.5rem;font-weight:800;color:var(--report-pink);">${chf(orderVal)}</div>
-          <div style="font-size:.72rem;color:#6b7280;text-transform:uppercase;">Ø Auftragswert</div>
-        </div>
-        <div style="background:#fee2e2;border-radius:8px;padding:14px;text-align:center;border:2px solid #fca5a5;">
-          <div style="font-size:1.5rem;font-weight:800;color:#dc2626;">${chf(chanceRisk)}</div>
-          <div style="font-size:.72rem;color:#6b7280;text-transform:uppercase;">Chancenrisiko / Jahr</div>
-        </div>
-      </div>
-      <p style="font-size:.78rem;color:#9ca3af;margin:0;">Orientierungswert: ${notHandled} Anfragen × ${chf(orderVal)} × 12 Monate. Keine Umsatzgarantie.</p>
-      ${fahrplan?.notes ? `<div style="margin-top:12px;padding:12px;background:#f9fafb;border-radius:8px;font-size:.85rem;color:#374151;border-left:3px solid #d1d5db;"><strong>Notiz aus dem Fahrplangespräch:</strong><br>${fahrplan.notes}</div>` : ''}`;
-
-    // Anfrageprozess
-    const prozessHTML = `
-      <div class="qa-list">
-        ${gf['GF04'] ? renderAnswerBlock('Über welche Kanäle kommen Anfragen rein?', gf['GF04'], 'gf') : ''}
-        ${gf['GF05'] ? renderAnswerBlock('Wie klar ist die Zuständigkeit?', gf['GF05'], 'gf') : ''}
-        ${gf['GF06'] ? renderAnswerBlock('Wo hakt es am häufigsten?', gf['GF06'], 'gf') : ''}
-        ${gf['GF07'] ? renderAnswerBlock('Wie wird nachgefasst?', gf['GF07'], 'gf') : ''}
-      </div>
-      ${maCount > 0 ? `
-      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--report-border);">
-        <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;color:var(--report-green);margin-bottom:12px;">Team-Perspektive (${maCount} Mitarbeitende)</div>
-        ${renderMAQuestion('Wie kommen Anfragen an? (MA01)', ma['MA01'], maCount)}
-        ${renderMAQuestion('Klarheit der Zuständigkeit (MA02)', ma['MA02'], maCount)}
-        ${renderMAQuestion('Wie häufig wird gesucht? (MA03)', ma['MA03'], maCount)}
-      </div>` : ''}`;
-    $('prozessContent').innerHTML = prozessHTML;
-
-    // Value Proposition
-    const hasGF = gfCount > 0;
-    if (hasGF) {
-      $('vpContent').innerHTML = `<div class="qa-list">
-        ${renderAnswerBlock('Warum kaufen Kunden heute?', gf['GF08'], 'gf')}
-        ${renderAnswerBlock('Was nervt Kunden vor dem Auftrag?', gf['GF09'], 'gf')}
-        ${renderAnswerBlock('Was macht Sie wirklich anders?', gf['GF10'], 'gf')}
-        ${renderAnswerBlock('Woran erkennt ein Neukunde, dass Sie gut sind?', gf['GF11'], 'gf')}
-        ${renderAnswerBlock('Welche Leistung soll wachsen?', gf['GF01'], 'gf')}
-        ${renderAnswerBlock('Welche Kunden häufiger gewinnen?', gf['GF02'], 'gf')}
-      </div>`;
-    } else {
-      $('vpSection').style.display = 'none';
-    }
-
-    // Wettbewerb
-    if (hasGF && (gf['GF12'] || gf['GF13'] || gf['GF14'])) {
-      $('wettbewerbContent').innerHTML = `<div class="qa-list">
-        ${renderAnswerBlock('Warum verlieren Sie manchmal?', gf['GF12'], 'gf')}
-        ${gf['GF13']?.followUpText || gf['GF13']?.answerValue ? renderAnswerBlock('Welche lokalen Konkurrenten?', gf['GF13'], 'gf') : ''}
-        ${gf['GF14']?.followUpText || gf['GF14']?.answerValue ? renderAnswerBlock('Wer ist digital stark in der Schweiz?', gf['GF14'], 'gf') : ''}
-      </div>`;
-    } else {
-      $('wettbewerbSection').style.display = 'none';
-    }
-
-    // Team-Perspektive (vollständig)
-    if (maCount > 0) {
-      $('teamContent').innerHTML = `
-        <div style="font-size:.82rem;color:#6b7280;margin-bottom:16px;">${maCount} Mitarbeitende aus verschiedenen Bereichen haben geantwortet.</div>
-        ${renderMAQuestion('Wo liegt das Wissen? (MA04/MA05)', ma['MA05'] || ma['MA04'], maCount)}
-        ${renderMAQuestion('Wie oft wird doppelt eingetragen? (MA06)', ma['MA06'], maCount)}
-        ${renderMAQuestion('Wie schnell ist der nächste Schritt klar? (MA07)', ma['MA07'], maCount)}
-        ${renderMAQuestion('Was würde am meisten entlasten?', ma['MA15'] || ma['MA14'], maCount)}
-      `;
-    } else {
-      $('teamSection').innerHTML = $('teamSection').innerHTML.replace('<!-- JS -->', '<p style="color:#9ca3af;font-size:.85rem;">Noch keine Team-Antworten eingegangen.</p>');
-    }
-
-    // Respondents
-    $('respondentList').innerHTML = allRespondents.map(r => {
-      const initials = ((r.first_name || '?')[0] + (r.last_name || '')[0]).toUpperCase();
-      const isGF = r.role === 'geschaeftsfuehrung';
-      return `<div class="respondent-pill ${isGF ? 'gf' : ''}">
-        <div class="respondent-avatar">${initials}</div>
-        <span><strong>${r.first_name || ''} ${r.last_name || ''}</strong> · ${r.role_label || r.role || '–'}</span>
-      </div>`;
+    var wu = wakeupDefs.find(function(d){ return digiScore >= d.minScore && digiScore <= d.maxScore; }) || wakeupDefs[1];
+    $('wakeupTitle').textContent = wu.title;
+    $('wakeupBody').textContent  = wu.body;
+    $('wakeupNumbers').innerHTML = [
+      { val: chf(chanceRisk),    label: 'Chancenrisiko / Jahr' },
+      { val: chf(ebitRisk),      label: 'EBIT-Risiko (15% Marge)' },
+      { val: digiScore + ' / 5', label: 'Digitalisierungs-Score' },
+      { val: autoScore + ' / 5', label: 'Automatisierungspotenzial' }
+    ].map(function(n) {
+      return '<div class="wakeup-num"><big>' + esc(n.val) + '</big><small>' + esc(n.label) + '</small></div>';
     }).join('');
 
-    // Recommendations
-    const recs = buildRecs(fahrplan, gf, ma);
-    const pClasses = ['p1','p2','p3','p4','p5'];
-    $('recList').innerHTML = recs.map((r, i) =>
-      `<div class="rec-item">
-        <div class="rec-num ${pClasses[i]}">${i+1}</div>
-        <div class="rec-body"><h4>${r.title}</h4><p>${r.body}</p></div>
-      </div>`
-    ).join('');
-
-    // 30-60-90 Plan
-    const g20 = gf['GF20']?.selectedValues || [];
-    const planItems = {
-      p30: ['Wichtigsten Engpass identifizieren', 'Quick Win umsetzen (< 1 Woche)', g20.includes('zentraler_anfrageeingang') ? 'Zentralen Anfrageeingang aufsetzen' : 'Prozess-Mapping durchführen'],
-      p60: [g20.includes('automatische_rueckfrage_mail') ? 'Automatische Eingangsbestätigung live' : 'Erste Automation aufsetzen', g20.includes('klare_wiedervorlage') ? 'Wiedervorlage-System einführen' : 'Tool-Konsolidierung starten', 'Team-Training & Adoption sichern'],
-      p90: ['Messbare Ergebnisse auswerten', g20.includes('crm_lead_liste') ? 'CRM / Lead-Liste produktiv' : 'Vollständige Daten-Zentralisierung', 'Nächste Automatisierungsstufe planen']
+    // ── KPI Grid ─────────────────────────────────────────────
+    var reactionMap = {
+      innerhalb_1_stunde: '< 1 Stunde',
+      gleicher_arbeitstag: 'gleicher Tag',
+      '1_2_arbeitstage': '1–2 Tage',
+      mehr_als_2_arbeitstage: '> 2 Tage',
+      sehr_unterschiedlich: 'variiert',
+      weiss_nicht: 'unklar'
     };
-    $('planGrid').innerHTML = `
-      <div class="plan-col p30"><h4>30 Tage</h4><ul>${planItems.p30.map(i=>`<li>${i}</li>`).join('')}</ul></div>
-      <div class="plan-col p60"><h4>60 Tage</h4><ul>${planItems.p60.map(i=>`<li>${i}</li>`).join('')}</ul></div>
-      <div class="plan-col p90"><h4>90 Tage</h4><ul>${planItems.p90.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+    var rt = fahrplan.reaction_time || '';
+    var rtLabel = reactionMap[rt] || rt || '–';
+    var rtBad   = rt.includes('2_arbeits') || rt.includes('unterschiedlich') || rt.includes('weiss');
+
+    var digiLabels = ['–','Sehr schwach','Basis vorhanden','Solide','Stark','Best Practice'];
+    var autoLabels = ['–','Gering','Vorhanden','Mittel','Hoch','Sehr hoch'];
+
+    $('kpiGrid').innerHTML = [
+      {
+        cls:   chanceRisk > 50000 ? 'danger' : 'warn',
+        label: 'Chancenrisiko / Jahr',
+        val:   chf(chanceRisk),
+        sub:   'verlorener Jahresumsatz'
+      },
+      {
+        cls:   digiScore <= 2 ? 'danger' : digiScore === 3 ? 'warn' : 'ok',
+        label: 'Digitalisierungs-Score',
+        val:   digiScore + ' / 5',
+        sub:   digiLabels[digiScore] || '–'
+      },
+      {
+        cls:   autoScore >= 4 ? 'danger' : autoScore >= 3 ? 'warn' : 'info',
+        label: 'Automatisierungs-Potenzial',
+        val:   autoScore + ' / 5',
+        sub:   autoLabels[autoScore] || '–'
+      },
+      {
+        cls:   rtBad ? 'warn' : 'ok',
+        label: 'Reaktionszeit Erstkontakt',
+        val:   rtLabel,
+        sub:   'Wie schnell wird reagiert?'
+      }
+    ].map(function(k) {
+      return '<div class="kpi ' + k.cls + '"><small>' + esc(k.label) + '</small><strong>' + esc(k.val) + '</strong><span>' + esc(k.sub) + '</span></div>';
+    }).join('');
+
+    // Main Finding
+    var bnLabels = {
+      anfrage_wird_zu_spaet_gesehen: 'Anfragen werden zu spät gesehen',
+      zustaendigkeit_unklar:         'Zuständigkeit ist unklar',
+      infos_fehlen:                  'Informationen fehlen beim Erstkontakt',
+      nachfassen_fehlt:              'Systematisches Nachfassen fehlt',
+      zu_viele_kanaele:              'Zu viele Kanäle, keine zentrale Übersicht',
+      kunde_nicht_qualifiziert:      'Kunden werden nicht qualifiziert',
+      kein_klares_problem:           'Kein klares Kundenproblem definiert'
+    };
+    var bn = fahrplan.main_bottleneck || '';
+    $('mainFinding').textContent = (bnLabels[bn] || bn || 'Hauptengpass noch nicht erfasst') +
+      ' – hier liegt der grösste Hebel für sofortige Verbesserung.';
+
+    // ── Was es Sie kostet / EBIT ─────────────────────────────
+    $('ebitContent').innerHTML =
+      '<p style="font-size:.87rem;color:#374151;margin:0 0 16px;line-height:1.65;">' +
+        'Nicht-digitalisierte KMU verlieren in der Schweiz durchschnittlich <strong>25–40% ihres EBIT</strong> ' +
+        '– nicht nur durch verlorene Anfragen, sondern durch stille Kosten: Doppelarbeit, Suchzeit, manuelle Übertragungsfehler, ' +
+        'verpasste Nachfass-Chancen. Das meiste davon ist <strong>unsichtbar</strong> – bis man es misst.' +
+      '</p>' +
+      '<div class="ebit-box">' +
+        '<div class="ebit-box-label">Ihr direktes Chancenrisiko / Jahr (aus Ihren Angaben)</div>' +
+        '<div class="ebit-box-number">' + chf(chanceRisk) + '</div>' +
+        '<div class="ebit-box-sub">Davon EBIT-Risiko bei 15 % Marge: <strong>' + chf(ebitRisk) + '</strong> – ' +
+          'Gewinn, den Sie heute schon erzielen könnten, aber nicht erzielen.' +
+        '</div>' +
+        '<div class="ebit-calc">' +
+          '<div class="ebit-calc-item"><strong>' + monthly + '</strong>Anfragen / Monat</div>' +
+          '<div class="ebit-calc-item"><strong>' + notHandled + '</strong>davon liegen bleiben</div>' +
+          '<div class="ebit-calc-item"><strong>' + chf(orderVal) + '</strong>Ø Auftragswert</div>' +
+          '<div class="ebit-calc-item"><strong>× 12</strong>Monate</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="highlight-box amber" style="margin-top:14px;">' +
+        '<div class="highlight-box-label">Versteckte Ineffizienzkosten (Schätzwert)</div>' +
+        '<p class="highlight-box-text" style="font-weight:400;font-size:.84rem;">' +
+          'Zusätzlich zu den verlorenen Aufträgen verliert Ihr Team täglich Zeit durch Suchen, doppeltes Erfassen ' +
+          'und manuelle Koordination. Erfahrungswert: weitere ~' + chf(hiddenCost) + ' / Jahr an versteckten Kosten.' +
+        '</p>' +
+      '</div>' +
+      (fahrplan.notes
+        ? '<div style="margin-top:12px;padding:12px;background:#f9fafb;border-radius:8px;font-size:.82rem;color:#374151;border-left:3px solid #d1d5db;">' +
+            '<strong>Notiz aus dem Gespräch:</strong><br>' + esc(fahrplan.notes) +
+          '</div>'
+        : '');
+
+    // ── Wo der Schuh drückt ──────────────────────────────────
+    var g06 = gfVals('GF06');
+    var prozessSteps = [
+      {
+        icon: '📥', label: 'Anfrageeingang',
+        desc: gfVals('GF04').join(', ') || 'Nicht erfasst',
+        bad:  g06.some(function(v){ return v.includes('kanaele')||v.includes('spaet'); })
+      },
+      {
+        icon: '👤', label: 'Zuständigkeit',
+        desc: gfVal('GF05') || 'Nicht erfasst',
+        bad:  g06.some(function(v){ return v.includes('zustaendigkeit'); })
+      },
+      {
+        icon: '🚧', label: 'Grösster Engpass',
+        desc: bnLabels[bn] || bn || 'Nicht erfasst',
+        bad:  !!bn
+      },
+      {
+        icon: '🔔', label: 'Nachfassen',
+        desc: gfVal('GF07') || 'Nicht erfasst',
+        bad:  g06.some(function(v){ return v.includes('nachfassen'); })
+      }
+    ];
+    $('prozessContent').innerHTML =
+      '<div class="process-flow">' +
+        prozessSteps.map(function(s) {
+          var color = s.bad ? 'red' : 'green';
+          return '<div class="process-step">' +
+            '<div class="process-icon ' + color + '">' + s.icon + '</div>' +
+            '<div class="process-body"><strong>' + esc(s.label) + '</strong><p>' + esc(s.desc) + '</p></div>' +
+            '</div>';
+        }).join('') +
+      '</div>' +
+      (gfVal('GF06') || gfVals('GF06').length
+        ? '<div class="qa-list" style="margin-top:16px;">' + renderQA('Wo hakt es am häufigsten? (GF-Perspektive)', 'GF06', 'gf') + '</div>'
+        : '');
+
+    // ── Was Ihr Team erlebt ──────────────────────────────────
+    if (maCount > 0) {
+      $('teamContent').innerHTML =
+        '<p style="font-size:.82rem;color:#6b7280;margin:0 0 16px;">' +
+          maCount + ' Mitarbeitende aus verschiedenen Bereichen haben den Fragebogen ausgefüllt.' +
+        '</p>' +
+        renderMAQ('Wie kommen Anfragen rein? (MA01)', 'MA01', maCount) +
+        renderMAQ('Wie klar ist die Zuständigkeit? (MA02)', 'MA02', maCount) +
+        renderMAQ('Wie oft wird etwas doppelt erfasst? (MA06)', 'MA06', maCount) +
+        (renderMAQ('Was würde am meisten entlasten? (MA15)', 'MA15', maCount) ||
+         renderMAQ('Was würde am meisten entlasten? (MA14)', 'MA14', maCount));
+    } else {
+      $('teamCard').style.display = 'none';
+    }
+
+    // ── Digitalisierungsgrad ─────────────────────────────────
+    var digiDesc = {
+      1: 'Sie arbeiten mehrheitlich auf Papier, in E-Mails und in Köpfen. Kein zentrales System, keine automatisierten Abläufe. Jeder Ausfall einer Schlüsselperson ist ein echtes Risiko. Ihre Mitbewerber sind digital bereits 3–5 Jahre weiter.',
+      2: 'Erste digitale Ansätze sind vorhanden – aber die Daten sind noch über mehrere Tools verteilt. Jeder pflegt seine eigene Liste. Das kostet täglich Zeit und verursacht stille Fehler.',
+      3: 'MS365 oder ein ähnliches Tool ist im Einsatz. Prozesse sind teilweise digital. Klares Ausbaupotenzial besteht bei Automatisierungen und einer zentralen Datenbasis.',
+      4: 'Gute digitale Basis. CRM oder zentrale Software aktiv. Der nächste Schritt sind gezielte Automatisierungen, die Ihrem Team täglich Arbeit abnehmen.',
+      5: 'Starke digitale Infrastruktur. Prozesse sind dokumentiert und zentral sichtbar. Fokus liegt auf Optimierung und Skalierung.'
+    };
+    $('digiContent').innerHTML =
+      '<div style="margin-bottom:20px;">' +
+        renderScoreRow('Digitalisierungs-Score', digiScore, 5) +
+        renderScoreRow('Automatisierungs-Potenzial', autoScore, 5) +
+      '</div>' +
+      '<div style="background:#f8fafc;border-radius:8px;padding:14px 16px;font-size:.85rem;color:#374151;line-height:1.65;">' +
+        '<strong>Was das für Sie bedeutet:</strong> ' + esc(digiDesc[digiScore] || '') +
+        (autoScore >= 4
+          ? ' <strong style="color:#dc2626">Ihr Automatisierungspotenzial ist hoch</strong> – konkrete Prozesse können in den nächsten 30 Tagen automatisiert werden.'
+          : '') +
+      '</div>' +
+      '<div class="qa-list" style="margin-top:16px;">' +
+        renderQA('Wo liegt das Wissen in Ihrem Betrieb?', 'GF15', 'gf') +
+        renderQA('Welche digitalen Tools nutzen Sie?',     'GF17', 'gf') +
+        renderQA('Klumpenrisiko: Wissen in einzelnen Personen?', 'GF18', 'gf') +
+      '</div>';
+
+    // ── Wettbewerb ───────────────────────────────────────────
+    var hasWettbewerb = hasGF && (gfVal('GF12') || gfVal('GF13') || gfVal('GF14'));
+    if (hasWettbewerb) {
+      $('wettbewerbContent').innerHTML =
+        '<p style="font-size:.87rem;color:#374151;margin:0 0 16px;line-height:1.65;">' +
+          'Über <strong>60% der wachsenden Schweizer KMU</strong> haben in den letzten 3 Jahren ' +
+          'ihren Anfrageprozess digitalisiert. Wer langsamer reagiert als der Mitbewerber, verliert ' +
+          'den Auftrag – nicht weil er schlechter ist, sondern weil er langsamer ist.' +
+        '</p>' +
+        '<div class="qa-list">' +
+          renderQA('Warum verlieren Sie manchmal Aufträge?', 'GF12', 'gf') +
+          renderQA('Lokale Mitbewerber',                     'GF13', 'gf') +
+          renderQA('Digital starke Player in der Schweiz',   'GF14', 'gf') +
+        '</div>';
+    } else {
+      $('wettbewerbCard').style.display = 'none';
+    }
+
+    // ── Handlungsempfehlungen ────────────────────────────────
+    var recs = buildRecs(fahrplan);
+    var badgeClasses = ['p1','p2','p3','p4'];
+    $('recList').innerHTML = recs.map(function(r, i) {
+      return '<div class="rec">' +
+        '<div class="rec-badge ' + (badgeClasses[i]||'p4') + '">' + (i+1) + '</div>' +
+        '<div class="rec-text"><h4>' + esc(r.title) + '</h4><p>' + esc(r.body) + '</p></div>' +
+        '</div>';
+    }).join('');
+
+    // ── 30-60-90 Tage Plan ───────────────────────────────────
+    var g20 = gfVals('GF20');
+    var p30 = [
+      'Grössten Engpass konkret benennen und priorisieren',
+      g20.some(function(v){ return v.includes('anfrageeingang'); })
+        ? 'Zentralen Anfrageeingang aufsetzen'
+        : 'Prozess-Mapping aller Anfragekanäle durchführen',
+      'Ersten Quick Win definieren und sofort umsetzen'
+    ];
+    var p60 = [
+      g20.some(function(v){ return v.includes('rueckfrage')||v.includes('bestaetigung'); })
+        ? 'Automatische Eingangsbestätigung live schalten'
+        : 'Erste Automatisierung produktiv stellen',
+      g20.some(function(v){ return v.includes('wiedervorlage'); })
+        ? 'Wiedervorlage-System aktivieren'
+        : 'Nachfass-Prozess automatisieren',
+      'Team einbinden – Training und Adoption sichern'
+    ];
+    var p90 = [
+      'Messbare Ergebnisse auswerten: verlorene Anfragen vs. vorher',
+      g20.some(function(v){ return v.includes('crm'); })
+        ? 'CRM vollständig produktiv in Betrieb'
+        : 'Vollständige Datenzentralisierung abschliessen',
+      'Nächste Automatisierungsstufe evaluieren und planen'
+    ];
+    $('planGrid').innerHTML =
+      '<div class="plan-col p30"><h4>30 Tage</h4><ul>' +
+        p30.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('') +
+      '</ul></div>' +
+      '<div class="plan-col p60"><h4>60 Tage</h4><ul>' +
+        p60.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('') +
+      '</ul></div>' +
+      '<div class="plan-col p90"><h4>90 Tage</h4><ul>' +
+        p90.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('') +
+      '</ul></div>';
+
+    // ── Teilnehmende ─────────────────────────────────────────
+    $('respondentList').innerHTML = respondents.map(function(r) {
+      var email = r.email || '';
+      var initials = email ? email[0].toUpperCase() : '?';
+      var isGF = r.role === 'gf' || r.role === 'geschaeftsfuehrung';
+      return '<div class="respondent-pill' + (isGF ? ' gf' : '') + '">' +
+        '<div class="r-avatar">' + initials + '</div>' +
+        '<span>' + esc(email) + ' · ' + esc(isGF ? 'Geschäftsführung' : 'Mitarbeiter/in') + '</span>' +
+        '</div>';
+    }).join('');
   }
 
-  // ── Fetch & init ──────────────────────────────────────────
+  // ── Fetch & Init ──────────────────────────────────────────
   async function init() {
-    const params = new URLSearchParams(window.location.search);
-    const assessmentId = params.get('assessment_id');
+    var params = new URLSearchParams(window.location.search);
+    var assessmentId = params.get('assessment_id');
 
     if (!assessmentId) {
       $('loadingView').style.display = 'none';
-      $('errorView').style.display = 'flex';
-      $('errorMsg').textContent = 'Keine Assessment-ID in der URL gefunden. Bitte den Link aus dem Fahrplan-Cockpit verwenden.';
+      $('errorView').style.display   = 'flex';
+      $('errorMsg').textContent = 'Keine Assessment-ID in der URL. Bitte den Link aus dem Fahrplan-Cockpit verwenden.';
       return;
     }
 
     try {
-      const url = `${REPORT_ENDPOINT}?assessment_id=${encodeURIComponent(assessmentId)}`;
-      const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const raw = await resp.json();
-      // n8n wraps response in array sometimes
-      const data = Array.isArray(raw) ? raw[0] : raw;
-      if (!data || data.error) throw new Error(data?.error || 'Leere Antwort vom Server');
+      var resp = await fetch(ENDPOINT + '?assessment_id=' + encodeURIComponent(assessmentId), {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      var raw  = await resp.json();
+      var data = Array.isArray(raw) ? raw[0] : raw;
+      if (!data || data.error) throw new Error(data && data.error ? data.error : 'Leere Antwort vom Server');
 
       $('loadingView').style.display = 'none';
-      $('reportView').style.display = 'block';
+      $('reportView').style.display  = 'block';
       render(data);
 
     } catch (err) {
       $('loadingView').style.display = 'none';
-      $('errorView').style.display = 'flex';
-      $('errorMsg').textContent = `Fehler: ${err.message}`;
+      $('errorView').style.display   = 'flex';
+      $('errorMsg').textContent = 'Fehler beim Laden: ' + err.message;
     }
   }
 
