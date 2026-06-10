@@ -368,8 +368,9 @@
 
     <!-- 7. Handlungsempfehlungen -->
     <div class="card">
-      <h2 class="card-title"><span>🚀</span> Was jetzt zu tun ist – priorisiert</h2>
+      <h2 class="card-title"><span>🚀</span> Ihre 3 grössten Hebel</h2>
       <div class="rec-list" id="recList"></div>
+      <div id="recNextStep"></div>
     </div>
 
     <!-- 8. 30-60-90 Tage Fahrplan -->
@@ -380,9 +381,9 @@
 
     <!-- CTA -->
     <div class="cta-box no-print">
-      <h2>Bereit, das zu ändern?</h2>
-      <p>Catchly zeigt Ihnen genau, wie Sie mit wenig Aufwand die grössten Hebel in Bewegung setzen – in 30 Tagen messbar. Keine langen Projekte. Keine IT-Abteilung nötig.</p>
-      <a href="https://catchly.ch" class="cta-btn">Jetzt Gespräch vereinbaren →</a>
+      <h2>Ihr nächster Schritt: die IST-Analyse</h2>
+      <p>Catchly analysiert Ihre drei grössten Hebel im Detail und hängt ein konkretes Preisschild dran – Investition gegen Rückfluss, schwarz auf weiss. Kein Workshop, keine langen Projekte: eine klare Entscheidungsgrundlage.</p>
+      <a href="https://catchly.ch" class="cta-btn">IST-Analyse anfragen →</a>
     </div>
 
     <!-- Teilnehmende -->
@@ -469,6 +470,18 @@
         { stat: '<strong>~30 %</strong> der Fachkräfte über 50', sowhat: 'Die Pensionierungswelle trifft Sie, während die Nachfrage steigt. Automatisierung ist der einzige Hebel, der bleibt.' }
       ],
       competition: 'Sie haben die Nachfrage – Sie verschenken sie nur. Während eine Anfrage bei Ihnen im Postfach liegt, hat der Betrieb nebenan den Termin schon bestätigt. Bei vollen Auftragsbüchern gewinnt nicht der mit den meisten Anfragen, sondern der, der keine verliert.'
+    },
+    allgemein: {
+      label: 'Branchenübergreifend',
+      eyebrow: 'Marktumfeld Schweizer KMU',
+      cover: 'Vier von zehn KMU, die heute noch auf Papier, E-Mail und Zuruf setzen, gelten in fünf Jahren als nicht mehr wettbewerbsfähig – Ihr Anfrageprozess entscheidet, auf welcher Seite Sie stehen.',
+      intro: 'Auch ohne Branchen-Detail gilt: Wer Anfragen langsam und manuell bearbeitet, verliert – unabhängig vom Gewerbe.',
+      market: [
+        { stat: '<strong>40 %</strong> der KMU auf Papier/E-Mail/Zuruf sind in 5 Jahren nicht mehr wettbewerbsfähig', sowhat: 'Digitalisierung ist keine Kür mehr, sondern entscheidet darüber, wer in Ihrem Markt übrig bleibt.' },
+        { stat: 'Nicht-digitalisierte KMU verlieren <strong>25–40 % ihres EBIT</strong>', sowhat: 'Der grösste Teil davon ist unsichtbar – Doppelarbeit, Suchzeit, verpasstes Nachfassen –, bis man es misst.' },
+        { stat: 'Ihr Mitbewerber ist nicht besser – nur <strong>schneller</strong>', sowhat: 'Bei vergleichbarem Angebot gewinnt fast immer der, der zuerst und verbindlich reagiert.' }
+      ],
+      competition: 'In fast jedem Gewerbe entscheidet heute Tempo über den Auftrag: Wer eine Anfrage Tage liegen lässt, verliert sie an den Betrieb, der in Minuten antwortet. Das gilt unabhängig davon, wie gut Sie Ihre eigentliche Arbeit machen.'
     }
   };
 
@@ -490,14 +503,14 @@
 
   function renderBrancheLayer(data, ctx) {
     var key  = detectBranche(data);
-    var info = BRANCHE_DATA[key];
+    var info = BRANCHE_DATA[key] || BRANCHE_DATA.allgemein;
     ctx = ctx || {};
 
     // Cover-Schocksatz
     if (info && $('coverShock')) {
       $('coverShock').style.display = 'block';
       $('coverShock').innerHTML =
-        '<span class="cover-shock-eyebrow">Branche: ' + esc(info.label) + '</span>' + esc(info.cover);
+        '<span class="cover-shock-eyebrow">' + esc(info.eyebrow || ('Branche: ' + info.label)) + '</span>' + esc(info.cover);
     }
 
     // Marktkontext & Zukunftsblick
@@ -734,7 +747,7 @@
 
   var REC_DEFAULT = {
     title: 'Quick Wins sofort identifizieren',
-    body:  'In einem halbtägigen Workshop mit Catchly: die 3 grössten Reibungspunkte sichtbar machen und die ersten konkreten Massnahmen sofort starten.'
+    body:  'Die drei grössten Reibungspunkte sichtbar machen und sofort die ersten konkreten Massnahmen starten – mit messbarem Effekt in 30 Tagen.'
   };
 
   function buildRecs(fahrplan) {
@@ -1033,15 +1046,42 @@
       $('wettbewerbCard').style.display = 'none';
     }
 
-    // ── Handlungsempfehlungen ────────────────────────────────
-    var recs = buildRecs(fahrplan);
-    var badgeClasses = ['p1','p2','p3','p4'];
+    // ── Ihre 3 grössten Hebel ────────────────────────────────
+    var recs = buildRecs(fahrplan).slice(0, 3);
+    var leverPool = [
+      { title: 'Zentraler Anfrageeingang', body: 'Alle Anfragen – Telefon, Mail, Web, Empfehlung – laufen in einem Eingang zusammen. Nichts geht mehr unter, jeder sieht sofort, was offen ist.' },
+      { title: 'Automatische Eingangsbestätigung & Nachfassen', body: 'Jede Anfrage wird in Minuten bestätigt und systematisch nachgefasst. Der Interessent fühlt sich gesehen – und springt nicht zum Mitbewerber ab.' },
+      { title: 'Datenzentralisierung – eine einzige Wahrheit', body: 'Kundenstatus, Notizen und Anfragestand für alle sichtbar in Echtzeit. Suchzeit, Versionswirrwarr und Doppelerfassung fallen weg.' }
+    ];
+    for (var li = 0; li < leverPool.length && recs.length < 3; li++) {
+      if (!recs.find(function(x){ return x.title === leverPool[li].title; })) recs.push(leverPool[li]);
+    }
+    recs = recs.slice(0, 3);
+    var badgeClasses = ['p1','p2','p3'];
     $('recList').innerHTML = recs.map(function(r, i) {
       return '<div class="rec">' +
-        '<div class="rec-badge ' + (badgeClasses[i]||'p4') + '">' + (i+1) + '</div>' +
+        '<div class="rec-badge ' + (badgeClasses[i]||'p3') + '">' + (i+1) + '</div>' +
         '<div class="rec-text"><h4>' + esc(r.title) + '</h4><p>' + esc(r.body) + '</p></div>' +
         '</div>';
     }).join('');
+
+    // Nächster Schritt: IST-Analyse mit Preisschild
+    if ($('recNextStep')) {
+      var emp_ns  = Number(fahrplan.employee_count || fahrplan.employees || 0) || (maCount > 0 ? maCount + 1 : 5);
+      var rate_ns = Number(fahrplan.hourly_rate_chf || fahrplan.hourly_rate || 0) || 60;
+      var totalLoss_ns = chanceRisk + Math.round(9.3 * rate_ns * emp_ns * 52);
+      var lossSentence = chanceRisk > 0
+        ? 'Chancenrisiko und Suchzeit summieren sich bei Ihnen auf rund ' + chf(totalLoss_ns) + ' pro Jahr. '
+        : '';
+      $('recNextStep').innerHTML =
+        '<div class="highlight-box indigo" style="margin-top:18px;">' +
+          '<div class="highlight-box-label">Ihr nächster Schritt: IST-Analyse mit Preisschild</div>' +
+          '<p class="highlight-box-text" style="font-weight:400;font-size:.86rem;line-height:1.6;">' +
+            lossSentence +
+            'Im nächsten Schritt analysiert Catchly genau diese drei Hebel im Detail und hängt ein konkretes Preisschild dran: Was kostet die Umsetzung – und was bringt sie zurück. So sehen Sie schwarz auf weiss, ob sich der Schritt rechnet.' +
+          '</p>' +
+        '</div>';
+    }
 
     // ── 30-60-90 Tage Plan ───────────────────────────────────
     var g20 = gfVals('GF20');
