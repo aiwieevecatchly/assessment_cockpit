@@ -236,6 +236,18 @@
     .highlight-box.indigo .highlight-box-label { color:#3730a3; }
     .highlight-box-text   { font-size:.88rem; font-weight:600; color:var(--rdk); margin:0; }
 
+    /* ── Branchen-Layer (NEU) ────────── */
+    .cover-shock { background:rgba(251,191,36,.14); border-left:4px solid #fbbf24; border-radius:8px; padding:14px 18px; margin:0 0 24px; font-size:1.02rem; font-weight:700; line-height:1.5; position:relative; z-index:1; }
+    .cover-shock-eyebrow { display:block; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:#fcd34d; font-weight:700; margin-bottom:6px; }
+    .market-intro { font-size:.9rem; color:#374151; line-height:1.6; margin:0 0 18px; font-weight:600; }
+    .market-row { display:flex; gap:16px; padding:14px 0; border-bottom:1px solid var(--rbr); flex-wrap:wrap; }
+    .market-row:last-child { border-bottom:none; }
+    .market-stat { flex:0 0 38%; min-width:200px; font-size:.92rem; color:var(--rdk); line-height:1.45; }
+    .market-stat strong { color:var(--rp); }
+    .market-sowhat { flex:1; min-width:220px; font-size:.84rem; color:var(--rmd); line-height:1.55; }
+    .market-sowhat strong { color:#b91c1c; }
+    @media (max-width:640px){ .market-stat{ flex:1 1 100%; } }
+
     /* ── Print ────────────────────────────────────────── */
     @media print {
       body { background:#fff; }
@@ -286,6 +298,7 @@
       <div class="cover-eyebrow">Catchly · Persönlicher Digitalisierungs-Check</div>
       <h1 class="cover-company" id="coverCompany">–</h1>
       <p class="cover-tagline">Digitalisierungsgrad · Prozessrisiko · Automatisierungspotenzial · Wettbewerb</p>
+      <div class="cover-shock" id="coverShock" style="display:none;"></div>
       <div class="cover-alert">
         <div class="cover-alert-label">Ihr jährliches Chancenrisiko</div>
         <div class="cover-alert-number" id="coverChanceRisk">CHF –</div>
@@ -306,6 +319,12 @@
       <div class="wakeup-numbers" id="wakeupNumbers"></div>
     </div>
 
+    <!-- NEU: Marktkontext & Zukunftsblick -->
+    <div class="card" id="marketCard" style="display:none;">
+      <h2 class="card-title"><span>🔭</span> Marktkontext &amp; Zukunftsblick: Ihre Branche</h2>
+      <div id="marketContent"></div>
+    </div>
+
     <!-- 1. Wo Sie heute stehen -->
     <div class="card">
       <h2 class="card-title"><span>📊</span> Wo Sie heute stehen</h2>
@@ -320,6 +339,7 @@
     <div class="card">
       <h2 class="card-title"><span>💸</span> Was es Sie kostet – heute und in 5 Jahren</h2>
       <div id="ebitContent"></div>
+      <div id="searchTimeContent"></div>
     </div>
 
     <!-- 3. Wo der Schuh drückt -->
@@ -389,6 +409,150 @@
   'use strict';
 
   var ENDPOINT = 'https://workflow.catchly.ch/webhook/get-report';
+
+  // ════════════════════════════════════════════════════════
+  //  NEU: Branchen-Datenmodul (Zukunftsblick & Schlagkraft)
+  //  Stand Juni 2026 · Quellen siehe Branchen-Datenmodul.md
+  // ════════════════════════════════════════════════════════
+  var BRANCHE_DATA = {
+    heizung: {
+      label: 'Heizung / HLK',
+      cover: 'Der Gesetzgeber garantiert Ihnen über Jahrzehnte Aufträge – die Frage ist nur, ob Ihr Anfrageprozess sie auffängt oder an den Nachbarn verschenkt.',
+      intro: 'Ihr Markt ist gesetzlich abgesichert. Das Risiko liegt nicht in der Nachfrage, sondern in Ihrer Fähigkeit, sie abzuwickeln, bevor sie zum Mitbewerber wandert.',
+      market: [
+        { stat: '<strong>Ab 2026</strong>: Verbot neuer fossiler Heizungen beim Ersatz (BL, ZH u.a.)', sowhat: 'Jeder Hausbesitzer mit alter Öl-/Gasheizung wird zwangsläufig zum Kunden – ein planbarer Auftragsstrom, der Ihnen zufliegt.' },
+        { stat: '<strong>~900.000</strong> fossile Heizungen müssen bis 2050 raus – <strong>~30.000 / Jahr</strong>', sowhat: 'Pflicht-Sanierungen über 25 Jahre. Wer schnell und sauber reagiert, sichert sich den Löwenanteil dieses Stroms.' },
+        { stat: 'Förderung <strong>bis 10.500 CHF</strong> pro Wärmepumpe', sowhat: 'Die Förderung treibt Kunden JETZT zum Handeln. Eine zu spät beantwortete Anfrage ruft einfach den Nächsten an.' }
+      ],
+      competition: 'Während Sie eine Anfrage 2–3 Tage liegen lassen, bestätigt der digitalisierte Mitbewerber sie in Minuten und hat den Vor-Ort-Termin gebucht, bevor Sie zurückrufen. Bei garantierter Nachfrage entscheidet nicht der Preis, sondern die Geschwindigkeit – und genau dort verlieren Sie heute Aufträge, ohne es zu merken.'
+    },
+    solar: {
+      label: 'Solar / Photovoltaik',
+      cover: 'Die fetten Jahre sind vorbei: schrumpfender Markt, Preisdruck, Pleitewelle – und Sie konkurrieren mit einem Prozess von gestern.',
+      intro: 'Der Markt konsolidiert. Jetzt zählt jede einzelne Anfrage doppelt – und Tempo entscheidet über Überleben oder Insolvenz.',
+      market: [
+        { stat: 'Zubau <strong>2025 −15 %</strong> nach Rekordjahr 2024 (1,8 GW)', sowhat: 'Die Nachfrage sinkt kurzfristig. Wer jetzt langsam ist, verliert genau die Aufträge, die über das Überleben entscheiden.' },
+        { stat: '<strong>Anhaltender Preisdruck</strong> & gesunkene Einspeisevergütungen', sowhat: 'Über den Preis gewinnen Sie nicht mehr. Über Reaktionszeit und professionellen Auftritt schon.' },
+        { stat: '<strong>Entlassungen & Insolvenzen</strong> in der Branche (3S, Meyer Burger)', sowhat: 'Die Konsolidierung trennt zwei Typen: Betriebe mit sauberem, schnellem Prozess – und die, die zur Statistik werden.' }
+      ],
+      competition: 'In einem schrumpfenden Markt verschwinden gerade Konkurrenten, aber die Überlebenden werden schneller und aggressiver. Wer Anfragen noch manuell bearbeitet, verliert die wenigen verbleibenden Aufträge an den, der in Minuten statt Tagen antwortet. Tempo ist hier kein Komfort, sondern Überlebensfrage.'
+    },
+    bau: {
+      label: 'Bauhauptgewerbe / Hochbau',
+      cover: 'Ein wachsender Markt, über 20.000 fehlende Fachkräfte – und ein Anfrageprozess, der jede Lücke an den Nachbarn verschenkt.',
+      intro: 'Aufträge gibt es genug. Ihr Engpass ist nicht die Nachfrage, sondern die Fähigkeit, sie abzuwickeln, bevor sie zum Mitbewerber wandert.',
+      market: [
+        { stat: 'Umsatz <strong>+2 % (2025 & 2026)</strong>, Q1 2026 sogar <strong>+5,6 %</strong>', sowhat: 'Der Markt wächst. Wenn Sie nicht mitwachsen, wächst Ihr Mitbewerber – mit Ihren Aufträgen.' },
+        { stat: '<strong>20.000+</strong> offene Stellen (+15 %), <strong>~30 %</strong> der Bauarbeiter über 50', sowhat: 'Jede manuelle Stunde, die heute verloren geht, ist morgen eine Stunde, die schlicht niemand mehr leistet.' },
+        { stat: 'Produktivität <strong>+0,26 % / Jahr</strong> in 20 Jahren (Wirtschaft: +1,32 %)', sowhat: 'Die Branche steht still. Wer jetzt digitalisiert, überholt nicht den Markt von morgen – er überholt 90 % der heutigen Mitbewerber sofort.' }
+      ],
+      competition: 'Ihre Mitbewerber sind nicht besser – sie sind schneller. Während Ihr Team Anfragen aus Überlastung liegen lässt, nimmt der digitalisierte Betrieb nebenan sie an, qualifiziert sie automatisch und schickt die Offerte raus, bevor Sie überhaupt zurückgerufen haben.'
+    },
+    gebaeudetechnik: {
+      label: 'Gebäudetechnik',
+      cover: 'Mehr Nachfrage als je zuvor, weniger Fachkräfte als je zuvor – und ein Prozess, der beide Probleme verschärft statt löst.',
+      intro: 'Die Energiewende treibt Ihre Nachfrage, die Pensionierungswelle frisst Ihr Personal. Die Schere schliesst nur, wer Anfragen und Koordination automatisiert.',
+      market: [
+        { stat: 'Nachfrage-Motor: <strong>~30.000</strong> Pflicht-Heizungswechsel / Jahr + Verbot fossiler Heizungen ab 2026', sowhat: 'Wärmepumpe, Lüftung, Gebäudeautomation – die Aufträge kommen von selbst. Die Frage ist nur, ob Sie sie bewältigen.' },
+        { stat: '<strong>Akuter Fachkräftemangel</strong> in allen Gewerken', sowhat: 'Sie könnten mehr annehmen, als Sie schaffen – und sagen aus Überlastung Nein zu Aufträgen, die der Mitbewerber dankend nimmt.' },
+        { stat: '<strong>~30 %</strong> der Fachkräfte über 50', sowhat: 'Das Wissen geht in Pension. Ohne digitale Prozesse geht es mit – und mit ihm Ihre Aufträge.' }
+      ],
+      competition: 'Bei Ihrer Auftragslage ist jede im Mail-Chaos versunkene Anfrage purer Margenverlust. Der Mitbewerber, der seine Anfragen zentral und automatisch steuert, wickelt mit gleich viel Personal das Doppelte ab – und nimmt Ihnen die Aufträge ab, die Sie aus Überlastung liegen lassen.'
+    },
+    sanitaer: {
+      label: 'Sanitär',
+      cover: 'Mehr Aufträge, als Sie bewältigen können – und genau das ist die Falle, wenn Ihr Prozess nicht mithält.',
+      intro: 'Die Nachfrage ist da. Ohne sauberen Anfrageprozess verschenken Sie Margen, die direkt vor Ihnen liegen.',
+      market: [
+        { stat: 'Sanierungswelle durch Energiewende & <strong>~30.000</strong> Heizungswechsel / Jahr', sowhat: 'Heizungsersatz zieht Sanitär- und Leitungsarbeiten nach sich – ein stetig wachsender Auftragspool.' },
+        { stat: '<strong>Akuter Fachkräftemangel</strong>, Löhne CHF 4.800–9.000', sowhat: 'Personal ist knapp und teuer. Jede Stunde Suchen und Doppelarbeit kostet Sie gleich doppelt.' },
+        { stat: '<strong>~30 %</strong> der Fachkräfte über 50', sowhat: 'Die Pensionierungswelle trifft Sie, während die Nachfrage steigt. Automatisierung ist der einzige Hebel, der bleibt.' }
+      ],
+      competition: 'Sie haben die Nachfrage – Sie verschenken sie nur. Während eine Anfrage bei Ihnen im Postfach liegt, hat der Betrieb nebenan den Termin schon bestätigt. Bei vollen Auftragsbüchern gewinnt nicht der mit den meisten Anfragen, sondern der, der keine verliert.'
+    }
+  };
+
+  function detectBranche(data) {
+    var b = (data && (data.branche || (data.fahrplan && data.fahrplan.branche))) || '';
+    b = String(b).toLowerCase();
+    if (!b) {
+      try { b = (new URLSearchParams(window.location.search).get('branche') || '').toLowerCase(); } catch(e) {}
+    }
+    if (!b) return '';
+    if (b.indexOf('heiz') >= 0 || b.indexOf('hlk') >= 0) return 'heizung';
+    if (b.indexOf('solar') >= 0 || b.indexOf('photovolt') >= 0 || b === 'pv') return 'solar';
+    if (b.indexOf('sanit') >= 0) return 'sanitaer';
+    if (b.indexOf('gebaeud') >= 0 || b.indexOf('gebäud') >= 0 || b.indexOf('haustech') >= 0) return 'gebaeudetechnik';
+    if (b.indexOf('bau') >= 0) return 'bau';
+    if (BRANCHE_DATA[b]) return b;
+    return '';
+  }
+
+  function renderBrancheLayer(data, ctx) {
+    var key  = detectBranche(data);
+    var info = BRANCHE_DATA[key];
+    ctx = ctx || {};
+
+    // Cover-Schocksatz
+    if (info && $('coverShock')) {
+      $('coverShock').style.display = 'block';
+      $('coverShock').innerHTML =
+        '<span class="cover-shock-eyebrow">Branche: ' + esc(info.label) + '</span>' + esc(info.cover);
+    }
+
+    // Marktkontext & Zukunftsblick
+    if (info && $('marketCard') && $('marketContent')) {
+      $('marketCard').style.display = 'block';
+      var rows = info.market.map(function(m) {
+        return '<div class="market-row">' +
+          '<div class="market-stat">' + m.stat + '</div>' +
+          '<div class="market-sowhat"><strong>Was das für Sie heisst:</strong> ' + esc(m.sowhat) + '</div>' +
+          '</div>';
+      }).join('');
+      $('marketContent').innerHTML = '<p class="market-intro">' + esc(info.intro) + '</p>' + rows;
+    }
+
+    // Versteckte Suchzeit-Steuer
+    if ($('searchTimeContent')) {
+      var fp = ctx.fahrplan || {};
+      var employees = Number(fp.employee_count || fp.employees || 0) || (ctx.maCount > 0 ? ctx.maCount + 1 : 5);
+      var rate = Number(fp.hourly_rate_chf || fp.hourly_rate || 0) || 60;
+      var hrs  = 9.3;
+      var cost = Math.round(hrs * rate * employees * 52);
+      $('searchTimeContent').innerHTML =
+        '<div class="ebit-box" style="background:linear-gradient(135deg,#7f1d1d,#b91c1c);margin-top:16px;">' +
+          '<div class="ebit-box-label">Versteckte Suchzeit-Steuer / Jahr</div>' +
+          '<div class="ebit-box-number">' + chf(cost) + '</div>' +
+          '<div class="ebit-box-sub">Laut McKinsey suchen Mitarbeitende 9,3 Std./Woche nach Informationen – fast ein ganzer Arbeitstag. Diese Zeit bezahlen Sie, ohne dass Wert entsteht.</div>' +
+          '<div class="ebit-calc">' +
+            '<div class="ebit-calc-item"><strong>9,3 Std</strong>Suchen / Woche / Person</div>' +
+            '<div class="ebit-calc-item"><strong>' + employees + '</strong>Mitarbeitende</div>' +
+            '<div class="ebit-calc-item"><strong>' + chf(rate) + '</strong>pro Stunde</div>' +
+            '<div class="ebit-calc-item"><strong>× 52</strong>Wochen</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="highlight-box red" style="margin-top:14px;">' +
+          '<div class="highlight-box-label">Der blinde Fleck</div>' +
+          '<p class="highlight-box-text" style="font-weight:400;font-size:.84rem;">' +
+            'Die meisten Unternehmer wissen nicht, dass ihr Team fast einen ganzen Arbeitstag pro Woche mit Suchen verbringt. ' +
+            'Diese Zeit taucht in keiner Rechnung auf – kostet Sie aber jedes Jahr real ' + chf(cost) + '.' +
+          '</p>' +
+        '</div>';
+    }
+
+    // Wettbewerb: branchenspezifische Bedrohung voranstellen
+    if (info && info.competition && $('wettbewerbContent')) {
+      var wc = $('wettbewerbContent');
+      var card = document.getElementById('wettbewerbCard');
+      if (card) card.style.display = '';
+      wc.innerHTML =
+        '<div class="highlight-box red" style="margin-bottom:16px;">' +
+          '<div class="highlight-box-label">' + esc(info.label) + ' – was konkret auf Sie zukommt</div>' +
+          '<p class="highlight-box-text" style="font-weight:400;font-size:.86rem;line-height:1.6;">' + esc(info.competition) + '</p>' +
+        '</div>' + wc.innerHTML;
+    }
+  }
+
 
   // ── DOM / Format helpers ─────────────────────────────────
   var $ = function(id) { return document.getElementById(id); };
@@ -925,6 +1089,9 @@
         '<span>' + esc(email) + ' · ' + esc(isGF ? 'Geschäftsführung' : 'Mitarbeiter/in') + '</span>' +
         '</div>';
     }).join('');
+
+    // ── NEU: Branchen-Layer rendern ──
+    renderBrancheLayer(data, { company:company, fahrplan:fahrplan, chanceRisk:chanceRisk, monthly:monthly, orderVal:orderVal, notHandled:notHandled, maCount:maCount });
   }
 
   // ── Fetch & Init ──────────────────────────────────────────
