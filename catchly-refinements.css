@@ -1,0 +1,178 @@
+/* =====================================================================
+   Catchly Routencheck – Refinements (additiv)
+   Lädt NACH assets/catchly.css. Verändert NICHT:
+   - das Logo (assets/logo-mark.png)
+   - die Markenfarben (--indigo #541388, --gold #FFD400, --pink #FE007D)
+   - die Font-Logik (Modak nur fürs Logo, Nunito für UI)
+   Zweck:
+   1) Saubere Trennung Kundenmodus / interner Modus
+   2) Klare Catchly-Markenpräsenz im Header
+   3) Feinschliff für Lesbarkeit & Wertigkeit (CHF-1'300-Niveau)
+   Es werden ausschliesslich bestehende Catchly-CSS-Variablen verwendet.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   1) KUNDENMODUS vs. INTERNER MODUS
+   Standard (mode-customer): keine Debug-/Test-/Export-Elemente sichtbar.
+   Interner Modus (?internal=1 | ?mode=intern | ?debug=1): alles sichtbar.
+   --------------------------------------------------------------------- */
+.mode-customer .debug-status,
+.mode-customer .backup-export {
+  display: none !important;
+}
+
+/* Interner-Modus-Badge */
+.internal-flag {
+  border-color: var(--indigo) !important;
+  background: rgba(84, 19, 136, .08) !important;
+  color: var(--indigo) !important;
+  box-shadow: 2px 2px 0 var(--indigo) !important;
+}
+.mode-customer .internal-flag { display: none !important; }
+.mode-internal .internal-flag { display: inline-flex; }
+
+/* Interne Bereiche optisch klar als „intern" markieren */
+.mode-internal .debug-status,
+.mode-internal .backup-export {
+  outline: 1.5px dashed rgba(84, 19, 136, .35);
+  outline-offset: 5px;
+  border-radius: 16px;
+}
+
+/* ---------------------------------------------------------------------
+   2) HEADER-MARKENPRÄSENZ
+   Logo bleibt unverändert; Wortmarke + erklärende Subline, genug Luft.
+   --------------------------------------------------------------------- */
+.brand-bar { gap: 16px; }
+
+.logo-lockup { align-items: center; gap: 12px; }
+
+/* Logo nie bis zur Unkenntlichkeit verkleinern */
+.logo-mark {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px;
+}
+
+.logo-stack {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1;
+}
+
+.brand-subline {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.brand-tags {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* ---------------------------------------------------------------------
+   3) HERO – ruhige, wertige Akzente (nur Markenfarben)
+   --------------------------------------------------------------------- */
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0 22px;
+}
+
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--ink);
+  background: rgba(255, 255, 255, .7);
+}
+
+/* dezenter Gold-Akzent unter der Hero-Headline */
+.welcomeView .display-title,
+#welcomeView .display-title {
+  position: relative;
+}
+#welcomeView .display-title::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 5px;
+  margin-top: 16px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--gold), var(--pink));
+}
+
+/* ---------------------------------------------------------------------
+   4) FORMULAR – Lesbarkeit & Hinweise
+   --------------------------------------------------------------------- */
+.label-note {
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: .02em;
+  text-transform: none;
+  color: var(--muted);
+}
+
+.field-hint {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------------
+   5) FRAGENFLUSS – klarere Auswahl & Fortschritt
+   --------------------------------------------------------------------- */
+/* ausgewählte Antwort deutlicher (Indigo-Akzent links) */
+.assessment-flow .choice-card.selected {
+  border-color: var(--indigo);
+  background: #fff;
+  box-shadow: inset 4px 0 0 var(--indigo), 0 10px 22px rgba(84, 19, 136, .10);
+}
+
+/* Fortschrittsbalken etwas präsenter & klar lesbares Label */
+.assessment-flow .progress-track { height: 9px; }
+.progress-meta #progressLabel { color: var(--indigo); }
+.progress-meta #areaLabel { color: var(--muted); }
+
+/* ---------------------------------------------------------------------
+   6) ABSCHLUSS – Sende-Button im Fokus
+   --------------------------------------------------------------------- */
+#submitActions .btn.primary {
+  min-height: 54px;
+  font-size: 17px;
+}
+
+/* ---------------------------------------------------------------------
+   7) MOBILE – Header sauber stapeln, Tap-Targets gross genug
+   --------------------------------------------------------------------- */
+@media (max-width: 760px) {
+  .brand-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand-tags { justify-content: flex-end; }
+  .brand-subline { letter-spacing: .1em; }
+  .hero-chip { font-size: 12px; padding: 6px 11px; }
+}
+
+@media (max-width: 460px) {
+  .logo-word { font-size: 30px; }
+  .brand-tags .pill { font-size: 12px; }
+}
