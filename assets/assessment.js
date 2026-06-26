@@ -1,5 +1,5 @@
 // Produktiver Webhook-Endpunkt. Keine Secrets/API-Keys im Frontend.
-const SUBMIT_ENDPOINT = 'https://workflow.catchly.ch/webhook/routencheck-submit';
+const SUBMIT_ENDPOINT = 'ttps://aieve.app.n8n.cloud/webhook/routencheck-submit';
 
 const DEFAULT_QUESTIONS = [
   {
